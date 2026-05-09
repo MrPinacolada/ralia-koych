@@ -1,93 +1,24 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Ralia Koych - global stylesheet
+   1) tokens (vars + base typography)
+   2) landing-specific component styles
+   3) reset + minimal app extras */
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-    -webkit-text-size-adjust: 100%;
-  }
+@import './colors_and_type.css';
+@import './landing.css';
 
-  body {
-    @apply bg-bone text-ink font-sans antialiased;
-    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
-    text-rendering: optimizeLegibility;
-    font-size: 17px;
-    line-height: 1.6;
-  }
+/* ── App-wide reset ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
-  ::selection {
-    @apply bg-clay/20 text-ink;
-  }
+body { margin: 0; min-height: 100vh; }
+img, svg { max-width: 100%; display: block; }
+button { font: inherit; }
 
-  :focus-visible {
-    @apply outline-none shadow-focus rounded-sm;
-  }
-
-  details > summary::-webkit-details-marker {
-    display: none;
-  }
-
-  details > summary::marker {
-    display: none;
-  }
+/* skip-link */
+.skip-link {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--moss); color: var(--paper);
+  padding: 12px 16px; border-radius: var(--r-sm);
+  font-family: var(--font-sans); font-size: 14px;
+  text-decoration: none; z-index: 100;
 }
-
-@layer components {
-  .container-narrow {
-    @apply max-w-narrow mx-auto;
-  }
-
-  .container-text {
-    @apply max-w-text mx-auto;
-  }
-
-  .container-wide {
-    @apply max-w-wide mx-auto;
-  }
-
-  .eyebrow {
-    @apply font-sans uppercase tracking-eyebrow text-xs md:text-sm font-medium text-fog;
-  }
-
-  /* Display headings — Cormorant regular (NOT italic by default).
-     Used for H1 hero + H2 секций. Italic — только через .pull-italic. */
-  .pull {
-    @apply font-display font-normal leading-[1.1];
-    letter-spacing: -0.005em;
-  }
-
-  /* Explicit italic — applies ONLY when this class is added.
-     Use sparingly: hero secondary line + 1-2 accents in case study. */
-  .pull-italic {
-    @apply font-display italic font-normal leading-[1.15];
-  }
-
-  /* Sans body emphasis — replaces italic-Cormorant for pain quotes,
-     FAQ questions, testimonials. One typeface family throughout. */
-  .lede {
-    @apply font-sans font-medium text-ink leading-snug;
-    letter-spacing: -0.005em;
-  }
-
-  .num {
-    @apply font-display font-light leading-none;
-  }
-}
-
-@layer utilities {
-  .img-placeholder {
-    background: linear-gradient(135deg, #E8DDC8 0%, #FAEFE2 60%, #E8DDC8 100%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+.skip-link:focus { left: 16px; top: 16px; }

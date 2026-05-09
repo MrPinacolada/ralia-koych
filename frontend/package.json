@@ -2,7 +2,7 @@
   "name": "ralia-koych-landing",
   "version": "0.1.0",
   "private": true,
-  "description": "Single-page landing for Раля Хабирова — coach by sustainable growth, ACC ICF",
+  "description": "Single-page landing for Ралия Хабирова — coach by sustainable growth, ACC ICF",
   "type": "module",
   "scripts": {
     "dev": "nuxt dev",
@@ -20,10 +20,8 @@
   "devDependencies": {
     "@nuxt/image": "^1.10.0",
     "@nuxtjs/google-fonts": "^3.2.0",
-    "@nuxtjs/tailwindcss": "^6.13.1",
     "@vueuse/core": "^12.0.0",
     "@vueuse/nuxt": "^12.0.0",
-    "tailwindcss": "^3.4.17",
     "typescript": "^5.6.3",
     "vue-tsc": "^2.2.0"
   },

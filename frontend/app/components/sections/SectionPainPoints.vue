@@ -1,46 +1,52 @@
 <script setup lang="ts">
 const { painPoints } = useLandingContent()
+
+// Split 8 quotes into 2 columns of 4 (markers continue across columns: col1 = 01–04, col2 = 05–08)
+const colLeft = computed(() => painPoints.slice(0, 4))
+const colRight = computed(() => painPoints.slice(4, 8))
+
+function marker(i: number) {
+  return String(i + 1).padStart(2, '0')
+}
 </script>
 
 <template>
-  <UiSectionWrapper anchor="for-whom" bg="bone" spacing="md">
-    <div class="max-w-wide mx-auto">
-      <div class="max-w-text mb-10">
-        <h2 class="pull text-[34px] md:text-[48px] text-ink mb-3">
-          Узнаёте себя?
-        </h2>
-        <p class="font-sans text-[17px] text-fog max-w-[56ch] leading-[1.55]">
-          Ко мне приходят специалисты и предприниматели в период перехода. Вот что я слышу на сессиях чаще всего — дословно.
-        </p>
-      </div>
+  <section id="whom">
+    <div class="container">
+      <header class="section-head reveal">
+        <div class="section-num">I</div>
+        <div>
+          <p class="section-eyebrow">Для кого это</p>
+          <h2 class="section-title">Узнаёте себя в одной из этих фраз?</h2>
+          <p class="section-lede">
+            Я собрала восемь самых частых формулировок, с которыми ко мне приходят. Если хотя бы одна звучит знакомо - вам сюда.
+          </p>
+        </div>
+      </header>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-10 md:gap-y-12">
-        <div v-for="(group, gi) in painPoints" :key="gi">
-          <p class="eyebrow text-clay mb-4">{{ group.eyebrow }}</p>
-          <ul class="divide-y divide-sand">
-            <li
-              v-for="(point, pi) in group.items"
-              :key="pi"
-              class="py-3.5 first:pt-0"
-            >
-              <p class="lede text-[17px] md:text-[18px]">
-                {{ point.quote }}
-              </p>
+      <div class="pain-grid reveal">
+        <div class="pain-col">
+          <ul>
+            <li v-for="(p, i) in colLeft" :key="i">
+              <span class="marker">{{ marker(i) }}</span>
+              <span>{{ p.quote }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="pain-col">
+          <ul>
+            <li v-for="(p, i) in colRight" :key="i">
+              <span class="marker">{{ marker(i + 4) }}</span>
+              <span>{{ p.quote }}</span>
             </li>
           </ul>
         </div>
       </div>
 
-      <div class="mt-14 pt-10 border-t border-sand max-w-text mx-auto text-center">
-        <p
-          class="font-sans font-medium text-[18px] md:text-[20px] text-ink mb-6 max-w-[48ch] mx-auto leading-snug"
-        >
-          Узнали себя? Приходите на первую встречу. Разберёмся, что за этим стоит и как двигаться устойчиво.
-        </p>
-        <UiAppButton variant="primary" size="md" href="#final-cta">
-          Записаться на диагностику
-        </UiAppButton>
+      <div class="pain-cta reveal">
+        <p>Если узнали себя - приходите на первую встречу. Разберёмся вместе, что за этим стоит и как двигаться устойчиво.</p>
+        <a href="#final-cta" class="btn btn-primary">Записаться на диагностику</a>
       </div>
     </div>
-  </UiSectionWrapper>
+  </section>
 </template>

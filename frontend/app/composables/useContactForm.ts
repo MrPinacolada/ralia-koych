@@ -33,7 +33,7 @@ export function useContactForm() {
       const ok: ContactFormResult = {
         ok: true,
         message:
-          'Открыла Telegram с готовым сообщением. Если он не открылся — напишите мне напрямую: @raliyaya',
+          'Открыла Telegram с готовым сообщением. Если он не открылся - напишите мне напрямую: @raliyaya',
       }
       result.value = ok
       return ok

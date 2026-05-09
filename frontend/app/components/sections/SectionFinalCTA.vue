@@ -14,9 +14,7 @@ const submitted = ref(false)
 async function onSubmit() {
   if (!form.name.trim() || !form.contact.trim()) return
   const res = await submit(form)
-  if (res.ok) {
-    submitted.value = true
-  }
+  if (res.ok) submitted.value = true
 }
 
 function reset() {
@@ -28,97 +26,95 @@ function reset() {
 </script>
 
 <template>
-  <UiSectionWrapper anchor="final-cta" bg="cream" spacing="lg">
-    <UiAppContainer width="narrow" as="div">
-      <div class="text-center">
-        <p class="eyebrow text-clay mb-5">Первая встреча</p>
-        <h2 class="pull-italic text-[36px] md:text-[56px] text-ink mb-5 leading-[1.1]">
-          Готовы выстроить опору на себя?
-        </h2>
-        <p class="font-sans text-[17px] text-ink/85 mb-8 max-w-[50ch] mx-auto leading-[1.6]">
-          Первая встреча — бесплатна. Посмотрим, есть ли между нами контакт, и наметим направление.
-        </p>
-
-        <UiAppButton
-          variant="primary"
-          size="md"
-          href="https://t.me/raliyaya"
-          external
-          class="mb-3"
+  <section id="final-cta" class="bg-cream" style="padding-block: 96px;">
+    <div class="container">
+      <div class="final reveal" style="margin-bottom: 56px;">
+        <p
+          class="section-eyebrow"
+          style="color: var(--clay); margin: 0 0 18px; padding-left: 0.55em;"
         >
-          Записаться в Telegram →
-        </UiAppButton>
-        <p class="font-sans text-sm text-fog mb-12">
-          Отвечаю лично, обычно в течение часа. Пишу с 9:00 до 21:00 МСК.
+          Первая встреча
         </p>
-
-        <hr class="border-sand max-w-[160px] mx-auto mb-12" />
-
-        <p class="eyebrow mb-5">Или напишите через форму</p>
+        <h2>Готовы выстроить опору на себя?</h2>
       </div>
 
-      <div v-if="submitted" class="bg-paper rounded-md p-8 md:p-10 shadow-soft text-center">
-        <p class="num text-[44px] text-clay mb-2">🌿</p>
-        <h3 class="pull text-[26px] md:text-[32px] text-ink mb-3">
-          Получила!
-        </h3>
-        <p class="font-sans text-[16px] text-ink/85 mb-5 leading-[1.6] max-w-[44ch] mx-auto">
-          Спасибо, что решились на этот шаг. Я уже вижу вашу заявку и напишу вам в Telegram сегодня — обычно в течение часа в рабочее время. Жду нашу встречу.
+      <div v-if="submitted" class="form-block reveal" style="text-align: center;">
+        <p
+          class="pull-italic"
+          style="font-size: 32px; color: var(--clay); margin: 0 0 12px;"
+        >
+          Получила! 🌿
         </p>
-        <p class="font-sans font-medium text-[15px] text-clay mb-6">
-          С теплом, Ралия
+        <p class="intro" style="font-weight: 400;">
+          Спасибо, что решились на этот шаг. Я уже вижу вашу заявку и напишу вам в Telegram сегодня - обычно в течение часа в рабочее время. Жду нашу встречу.
         </p>
-        <p class="font-sans text-sm text-fog mb-5 max-w-[44ch] mx-auto leading-[1.6]">
-          Загляните в Telegram (<a href="https://t.me/raliyaya" target="_blank" rel="noopener noreferrer" class="text-ink hover:text-clay">@raliyaya</a>). Если за час я не написала — посмотрите «Архив» и «Спам». И подпишитесь на <a href="https://t.me/raliyagovorit" target="_blank" rel="noopener noreferrer" class="text-ink hover:text-clay">@raliyagovorit</a> — там я делюсь практиками про отдых, опору и движение.
+        <p class="helper" style="margin-top: 16px;">
+          С теплом, Ралия - и подпишитесь на
+          <a
+            href="https://t.me/raliyagovorit"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="color: var(--ink); text-decoration: underline; text-decoration-color: var(--clay);"
+          >@raliyagovorit</a>.
         </p>
-        <UiAppButton variant="ghost" size="sm" @click="reset">
-          Отправить ещё одну заявку
-        </UiAppButton>
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          style="margin-top: 20px; align-self: center;"
+          @click="reset"
+        >
+          Отправить ещё одну
+        </button>
       </div>
 
       <form
         v-else
-        class="text-left space-y-6"
+        class="form-block reveal"
         @submit.prevent="onSubmit"
       >
-        <p class="font-sans font-medium text-[17px] md:text-[18px] text-ink leading-snug max-w-[58ch]">
-          Напишите, как вас зовут и как с вами связаться. Я отвечу лично в течение нескольких часов.
-        </p>
+        <p class="intro">Напишите, как вас зовут и как с вами связаться. Я отвечу лично в течение нескольких часов.</p>
 
-        <UiAppInput
-          v-model="form.name"
-          label="Как вас зовут?"
-          placeholder="Ваше имя"
-          required
-        />
-        <UiAppInput
-          v-model="form.contact"
-          label="Telegram или телефон"
-          placeholder="@ваш_ник или номер телефона"
-          required
-        />
-        <UiAppInput
-          v-model="form.note"
-          label="Что у вас сильнее всего болит?"
-          placeholder="2-3 строки — по желанию"
-          multiline
-          :rows="3"
-          helper="По желанию — поможет мне подготовиться к встрече."
-        />
+        <label>
+          <span class="label-text">Как вас зовут <span class="req">*</span></span>
+          <input
+            v-model="form.name"
+            placeholder="Ваше имя"
+            required
+          >
+        </label>
 
-        <p v-if="result && !result.ok" class="font-sans text-sm text-clay">
+        <label>
+          <span class="label-text">Telegram или телефон <span class="req">*</span></span>
+          <input
+            v-model="form.contact"
+            placeholder="@ваш_ник или номер телефона"
+            required
+          >
+        </label>
+
+        <label>
+          <span class="label-text">Что у вас сильнее всего болит?</span>
+          <textarea
+            v-model="form.note"
+            rows="3"
+            placeholder="2–3 строки - по желанию"
+          ></textarea>
+          <span class="helper">Поможет мне подготовиться к встрече.</span>
+        </label>
+
+        <p v-if="result && !result.ok" style="font-family: var(--font-sans); font-size: 14px; color: var(--clay); margin: 0;">
           {{ result.message }}
         </p>
 
-        <UiAppButton
+        <button
           type="submit"
-          variant="primary"
-          size="md"
+          class="btn btn-primary"
           :disabled="loading || !form.name.trim() || !form.contact.trim()"
+          style="align-self: flex-start;"
         >
           {{ loading ? 'Отправляем…' : 'Отправить заявку' }}
-        </UiAppButton>
+        </button>
       </form>
-    </UiAppContainer>
-  </UiSectionWrapper>
+    </div>
+  </section>
 </template>

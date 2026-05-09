@@ -1,12 +1,12 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Раля Говорит — коуч по устойчивому росту, ACC ICF',
+  title: 'Ралия Говорит - коуч по устойчивому росту, ACC ICF',
   description:
     'Помогаю специалистам и предпринимателям в период карьерных и жизненных перемен устойчиво двигаться к своим целям без самосаботажа и парализующего внутреннего критика.',
-  ogTitle: 'Раля Говорит — коуч по устойчивому росту, ACC ICF',
+  ogTitle: 'Ралия Говорит - коуч по устойчивому росту, ACC ICF',
   ogDescription:
     'Помогаю специалистам и предпринимателям устойчиво двигаться к своим целям. Бесплатная диагностическая сессия.',
-  ogImage: '/og-image.jpg',
+  ogImage: '/og-image.svg',
   ogType: 'website',
   twitterCard: 'summary_large_image',
 })
@@ -21,7 +21,7 @@ useHead({
           {
             '@type': 'Person',
             name: 'Ралия Хабирова',
-            alternateName: 'Раля Говорит',
+            alternateName: 'Ралия Говорит',
             jobTitle: 'Коуч по устойчивому росту, ACC ICF',
             description:
               'Сертифицированный коуч ICF (ACC) с магистратурой по психологии образования. Работаю с самосаботажем, внутренним критиком и карьерными переходами.',
@@ -41,41 +41,16 @@ useHead({
           },
           {
             '@type': 'ProfessionalService',
-            name: 'Раля Говорит — коучинг по устойчивому росту',
+            name: 'Ралия Говорит - коучинг по устойчивому росту',
             serviceType: 'Coaching',
             areaServed: 'Россия и русскоязычные страны',
             provider: { '@type': 'Person', name: 'Ралия Хабирова' },
             offers: [
-              {
-                '@type': 'Offer',
-                name: 'Бесплатная диагностическая сессия',
-                price: '0',
-                priceCurrency: 'RUB',
-              },
-              {
-                '@type': 'Offer',
-                name: 'Стратегическая сессия',
-                price: '7000',
-                priceCurrency: 'RUB',
-              },
-              {
-                '@type': 'Offer',
-                name: 'Краткосрочная работа (3 сессии)',
-                price: '15000',
-                priceCurrency: 'RUB',
-              },
-              {
-                '@type': 'Offer',
-                name: 'Среднесрочная работа (5 сессий)',
-                price: '23000',
-                priceCurrency: 'RUB',
-              },
-              {
-                '@type': 'Offer',
-                name: 'Долгосрочная работа (10 сессий)',
-                price: '40000',
-                priceCurrency: 'RUB',
-              },
+              { '@type': 'Offer', name: 'Бесплатная диагностическая сессия', price: '0', priceCurrency: 'RUB' },
+              { '@type': 'Offer', name: 'Краткосрочная работа (3 сессии)', price: '15000', priceCurrency: 'RUB' },
+              { '@type': 'Offer', name: 'Среднесрочная работа (5 сессий)', price: '23000', priceCurrency: 'RUB' },
+              { '@type': 'Offer', name: 'Долгосрочная работа (10 сессий)', price: '40000', priceCurrency: 'RUB' },
+              { '@type': 'Offer', name: 'Групповой мастермайнд', price: '1500', priceCurrency: 'RUB' },
             ],
           },
         ],
@@ -83,18 +58,34 @@ useHead({
     },
   ],
 })
+
+// Reveal-on-scroll: add `.in` class to all `.reveal` elements when they enter viewport
+onMounted(() => {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'))
+    return
+  }
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('in')
+          io.unobserve(en.target)
+        }
+      })
+    },
+    { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+  )
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el))
+})
 </script>
 
 <template>
-  <div class="min-h-screen bg-bone text-ink">
-    <a
-      href="#hero"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-moss focus:text-paper focus:px-4 focus:py-2 focus:rounded-sm"
-    >
-      Перейти к контенту
-    </a>
+  <div>
+    <a href="#hero" class="skip-link">Перейти к контенту</a>
 
     <AppNav />
+    <SectionsSectionMasthead />
 
     <main>
       <SectionsSectionHero />
@@ -110,7 +101,6 @@ useHead({
     </main>
 
     <SectionsSectionFooter />
-
     <StickyMobileCTA />
   </div>
 </template>

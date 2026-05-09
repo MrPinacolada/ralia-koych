@@ -3,23 +3,25 @@ const { faqItems } = useLandingContent()
 </script>
 
 <template>
-  <UiSectionWrapper anchor="faq" bg="sand" spacing="md">
-    <UiAppContainer width="text">
-      <p class="eyebrow mb-3">Частые вопросы</p>
-      <h2 class="pull text-[34px] md:text-[48px] text-ink mb-8">
-        Что обычно спрашивают
-      </h2>
+  <section id="faq" class="bg-sand">
+    <div class="container">
+      <header class="section-head reveal">
+        <div class="section-num">VIII</div>
+        <div>
+          <p class="section-eyebrow">Частые вопросы</p>
+          <h2 class="section-title">Что обычно спрашивают</h2>
+        </div>
+      </header>
 
-      <div>
-        <UiAccordionItem
-          v-for="(item, i) in faqItems"
-          :key="i"
-          :question="item.question"
-          :is-last="i === faqItems.length - 1"
-        >
-          <p>{{ item.answer }}</p>
-        </UiAccordionItem>
+      <div class="faq reveal" style="max-width: 80ch;">
+        <details v-for="(item, i) in faqItems" :key="i">
+          <summary>
+            <span>{{ item.question }}</span>
+            <span class="toggle" aria-hidden="true">+</span>
+          </summary>
+          <p class="answer">{{ item.answer }}</p>
+        </details>
       </div>
-    </UiAppContainer>
-  </UiSectionWrapper>
+    </div>
+  </section>
 </template>

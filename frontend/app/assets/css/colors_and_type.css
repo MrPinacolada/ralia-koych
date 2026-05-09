@@ -1,0 +1,252 @@
+/* =====================================================================
+   Ralia Koych ("Раля Говорит") - colors & type tokens
+   Source: frontend/tailwind.config.ts + frontend/app/assets/css/main.css
+   Editorial-premium palette (warm bone + ink + moss + clay) + dual type
+   stack: Cormorant Garamond display / Onest sans.
+   ===================================================================== */
+
+/* ── Webfonts (Cyrillic + Latin) ────────────────────────────────────── */
+/* Cormorant Garamond - display serif, regular by DEFAULT (italic = explicit) */
+/* Onest - body sans, full Cyrillic support */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,300;1,400;1,500&family=Onest:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── Color · core palette ───────────────────────────────────────── */
+  --bone:   #F8F4EC;   /* page bg - warm off-white */
+  --paper:  #FFFFFF;   /* card bg - pure white */
+  --ink:    #1A1814;   /* primary text - warm near-black */
+  --moss:   #3F4E36;   /* primary CTA, accent - deep green */
+  --clay:   #B85F40;   /* secondary accent - terracotta */
+  --sand:   #E8DDC8;   /* subtle bg, dividers - warm beige */
+  --fog:    #6B7165;   /* secondary text - gray-green */
+  --gold:   #A98855;   /* sparing accent - muted ochre */
+  --cream:  #FAEFE2;   /* tint bg - pale apricot */
+
+  /* ── Color · semantic aliases ───────────────────────────────────── */
+  --bg-page:        var(--bone);
+  --bg-card:        var(--paper);
+  --bg-tint:        var(--cream);
+  --bg-band:        var(--sand);
+  --bg-inverse:     var(--ink);
+
+  --fg-primary:     var(--ink);
+  --fg-secondary:   color-mix(in oklab, var(--ink) 85%, transparent);
+  --fg-muted:       var(--fog);
+  --fg-on-inverse:  var(--bone);
+
+  --accent-primary: var(--moss);   /* CTAs, "do this" affordances */
+  --accent-warm:    var(--clay);   /* eyebrows, italic emphasis, numerals */
+
+  --divider:        var(--sand);
+  --border-strong:  color-mix(in oklab, var(--ink) 30%, transparent);
+
+  /* ── Type · families ────────────────────────────────────────────── */
+  --font-display: "Cormorant Garamond", "PT Serif", Georgia, serif;
+  --font-sans:    "Onest", "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono:    ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ── Type · scale (mobile-first, px) ────────────────────────────── */
+  --fs-xs:    11px;   /* eyebrow */
+  --fs-sm:    13px;   /* meta, footnote */
+  --fs-base:  15px;   /* dense body */
+  --fs-body:  17px;   /* default body, mobile-first reading */
+  --fs-lede:  18px;   /* sans emphasis (replaces italic body) */
+  --fs-h3:    20px;
+  --fs-h2:    34px;   /* section H2 - mobile */
+  --fs-h2-lg: 48px;   /* section H2 - desktop */
+  --fs-h1:    42px;   /* hero H1 - mobile */
+  --fs-h1-lg: 72px;   /* hero H1 - desktop */
+  --fs-num:   72px;   /* method numerals - mobile */
+  --fs-num-lg:104px;  /* method numerals - desktop */
+
+  /* ── Type · weights & line-heights ──────────────────────────────── */
+  --lh-tight: 1.1;
+  --lh-snug:  1.25;
+  --lh-body:  1.6;     /* paragraph default */
+  --lh-roomy: 1.7;     /* long-form essay */
+
+  --ls-tight:    -0.005em;
+  --ls-eyebrow:  0.18em;   /* CRITICAL: editorial eyebrow tracking */
+
+  /* ── Spacing ────────────────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* Section spacing - vertical rhythm between major bands */
+  --section-xs: 4rem;    /* 64px */
+  --section-sm: 6rem;    /* 96px */
+  --section:    8rem;    /* 128px - default */
+  --section-lg: 10rem;   /* 160px */
+  --section-xl: 14rem;   /* 224px */
+
+  /* Container widths */
+  --max-narrow: 580px;   /* form columns */
+  --max-text:   720px;   /* long-form prose */
+  --max-wide:  1180px;   /* full layout */
+
+  /* ── Radii (small, restrained) ──────────────────────────────────── */
+  --r-xs: 2px;
+  --r-sm: 4px;     /* buttons, inputs */
+  --r-md: 8px;     /* cards */
+  --r-lg: 16px;    /* hero image, large feature */
+
+  /* ── Shadows (very soft, warm-tinted) ───────────────────────────── */
+  --shadow-subtle: 0 1px 2px rgba(26, 24, 20, 0.04);
+  --shadow-soft:   0 2px 8px rgba(26, 24, 20, 0.06);
+  --shadow-lift:   0 8px 24px rgba(26, 24, 20, 0.08);
+  --shadow-focus:  0 0 0 3px rgba(63, 78, 54, 0.25);   /* moss */
+
+  /* ── Motion ─────────────────────────────────────────────────────── */
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur-base: 200ms;
+  --dur-slow: 350ms;
+}
+
+/* =====================================================================
+   Base typography - semantic element styles
+   ===================================================================== */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-page);
+  color: var(--fg-primary);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--clay) 20%, transparent);
+  color: var(--fg-primary);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--r-sm);
+}
+
+/* ── Display headings: Cormorant, regular by default ────────────────── */
+/* Italic is OPT-IN via .pull-italic - never the default. This is one of
+   the brand's strictest rules: italic is an accent, not a style. */
+.pull,
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: normal;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--fg-primary);
+}
+
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+@media (min-width: 768px) {
+  h1 { font-size: var(--fs-h1-lg); }
+  h2 { font-size: var(--fs-h2-lg); }
+}
+
+.pull-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: var(--ls-tight);
+}
+
+/* ── Body & subhead - Onest sans ────────────────────────────────────── */
+p {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-secondary);
+  max-width: 64ch;
+}
+
+h3 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-h3);
+  letter-spacing: -0.01em;
+  line-height: var(--lh-snug);
+  color: var(--fg-primary);
+}
+
+/* Sans medium - replaces italic body. Used for pain quotes, FAQ
+   questions, testimonials. Keeps the page to ONE typographic voice
+   in the body, with italic reserved for display moments only. */
+.lede {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--fs-lede);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--ls-tight);
+  color: var(--fg-primary);
+}
+
+/* ── Eyebrow - uppercase tracked label, the editorial signature ─────── */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+@media (min-width: 768px) {
+  .eyebrow { font-size: var(--fs-sm); }
+}
+.eyebrow--accent { color: var(--accent-warm); }
+
+/* ── Numerals - light Cormorant, used for steps & prices ────────────── */
+.num {
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 1;
+  font-size: var(--fs-num);
+  color: var(--accent-warm);
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+}
+@media (min-width: 768px) { .num { font-size: var(--fs-num-lg); } }
+
+/* ── Links ──────────────────────────────────────────────────────────── */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--clay);
+  text-underline-offset: 4px;
+  transition: text-decoration-thickness var(--dur-base) var(--ease-out-soft);
+}
+a:hover { text-decoration-thickness: 2px; }
+
+/* ── Containers ─────────────────────────────────────────────────────── */
+.container-narrow { max-width: var(--max-narrow); margin-inline: auto; }
+.container-text   { max-width: var(--max-text);   margin-inline: auto; }
+.container-wide   { max-width: var(--max-wide);   margin-inline: auto; }
+
+/* ── Reduced motion ─────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

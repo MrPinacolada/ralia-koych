@@ -4,7 +4,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: [
-    '@nuxtjs/tailwindcss',
     '@nuxtjs/google-fonts',
     '@vueuse/nuxt',
     '@nuxt/image',
@@ -42,7 +41,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'ru' },
-      title: 'Раля Говорит — коуч по устойчивому росту, ACC ICF',
+      title: 'Ралия Говорит — коуч по устойчивому росту, ACC ICF',
       titleTemplate: '%s',
       meta: [
         { charset: 'utf-8' },
@@ -55,7 +54,7 @@ export default defineNuxtConfig({
         },
         { property: 'og:type', content: 'website' },
         { property: 'og:locale', content: 'ru_RU' },
-        { property: 'og:title', content: 'Раля Говорит — коуч по устойчивому росту, ACC ICF' },
+        { property: 'og:title', content: 'Ралия Говорит — коуч по устойчивому росту, ACC ICF' },
         {
           property: 'og:description',
           content:

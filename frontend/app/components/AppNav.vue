@@ -1,38 +1,35 @@
 <script setup lang="ts">
+import { useWindowScroll } from '@vueuse/core'
+
+const { y } = useWindowScroll()
+
+const progress = computed(() => {
+  if (!import.meta.client) return 0
+  const h = document.documentElement
+  const total = h.scrollHeight - h.clientHeight
+  if (total <= 0) return 0
+  return Math.min(100, Math.max(0, (y.value / total) * 100))
+})
+
 const navItems = [
+  { href: '#whom', label: 'Для кого' },
   { href: '#method', label: 'Метод' },
-  { href: '#credentials', label: 'Образование' },
   { href: '#services', label: 'Услуги' },
+  { href: '#case', label: 'Кейс' },
   { href: '#faq', label: 'Вопросы' },
 ]
 </script>
 
 <template>
-  <header
-    class="sticky top-0 z-40 bg-bone/90 backdrop-blur-sm border-b border-sand"
-  >
-    <nav
-      class="max-w-wide mx-auto flex items-center justify-between gap-8 px-6 md:px-12 py-4"
-      aria-label="Главное меню"
-    >
-      <a href="#hero" class="font-display italic text-xl text-ink whitespace-nowrap">
-        Раля Говорит
-      </a>
-
-      <ul class="hidden md:flex items-center gap-7 font-sans text-sm text-fog">
+  <header class="nav-bar">
+    <nav class="nav-inner" aria-label="Главное меню" style="padding-block: 12px;">
+      <a class="nav-logo" href="#hero">Ралия Хабирова</a>
+      <ul class="nav-links">
         <li v-for="item in navItems" :key="item.href">
-          <a
-            :href="item.href"
-            class="hover:text-ink transition-colors duration-200"
-          >
-            {{ item.label }}
-          </a>
+          <a :href="item.href">{{ item.label }}</a>
         </li>
       </ul>
-
-      <UiAppButton variant="secondary" size="sm" href="#final-cta">
-        Записаться
-      </UiAppButton>
     </nav>
+    <div class="scroll-progress" :style="{ width: progress + '%' }"></div>
   </header>
 </template>
