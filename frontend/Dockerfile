@@ -47,4 +47,4 @@ COPY --from=builder /app/.output/public /usr/share/nginx/html
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:3000/ || exit 1
+  CMD wget --quiet --spider http://127.0.0.1:3000/ || exit 1
