@@ -18,7 +18,7 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
 
 
 # ============================================================
-# 2. Build stage — produce .output for production
+# 2. Build stage — prerender the site to pure static files
 # ============================================================
 FROM node:22-alpine AS builder
 WORKDIR /app
@@ -31,31 +31,20 @@ COPY . .
 ENV NODE_ENV=production
 ENV NUXT_TELEMETRY_DISABLED=1
 
-RUN pnpm run build
+# nuxt generate → .output/public (static HTML + assets, no Node server needed)
+RUN pnpm run generate
 
 
 # ============================================================
-# 3. Runtime stage — minimal Node Alpine, only .output
+# 3. Runtime stage — nginx serving static files, non-root
 # ============================================================
-FROM node:22-alpine AS runtime
-WORKDIR /app
+FROM nginxinc/nginx-unprivileged:1.27-alpine AS runtime
 
-ENV NODE_ENV=production
-ENV NUXT_TELEMETRY_DISABLED=1
-ENV HOST=0.0.0.0
-ENV PORT=3000
-
-# Non-root user for safety
-RUN addgroup -S nuxt && adduser -S nuxt -G nuxt
-
-COPY --from=builder --chown=nuxt:nuxt /app/.output ./.output
-
-USER nuxt
+# Same port as the old Node runtime, so deploy/proxy config stays untouched
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/.output/public /usr/share/nginx/html
 
 EXPOSE 3000
 
-# Healthcheck — Nuxt server should answer on /
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD wget --quiet --tries=1 --spider http://localhost:3000/ || exit 1
-
-CMD ["node", ".output/server/index.mjs"]
