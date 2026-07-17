@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { painPoints } = useLandingContent()
 
-// Split 8 quotes into 2 columns of 4 (markers continue across columns: col1 = 01–04, col2 = 05–08)
+// Split 8 quotes into 2 columns of 4 (markers 01–04 / 05–08)
 const colLeft = computed(() => painPoints.slice(0, 4))
 const colRight = computed(() => painPoints.slice(4, 8))
 
@@ -16,11 +16,9 @@ function marker(i: number) {
       <header class="section-head reveal">
         <div class="section-num">I</div>
         <div>
-          <p class="section-eyebrow">Для кого это</p>
-          <h2 class="section-title">Узнаёте себя в одной из этих фраз?</h2>
-          <p class="section-lede">
-            Я собрала восемь самых частых формулировок, с которыми ко мне приходят. Если хотя бы одна звучит знакомо - вам сюда.
-          </p>
+          <p class="section-eyebrow">Для кого</p>
+          <h2 class="section-title nowrap-lines">Узнаёте себя в одной из этих фраз?</h2>
+          <p class="section-lede nowrap-lines">Я собрала восемь самых частых запросов, с которыми ко мне приходят:</p>
         </div>
       </header>
 
@@ -44,8 +42,19 @@ function marker(i: number) {
       </div>
 
       <div class="pain-cta reveal">
-        <p>Если узнали себя - приходите на первую встречу. Разберёмся вместе, что за этим стоит и как двигаться устойчиво.</p>
-        <a href="#final-cta" class="btn btn-primary">Записаться на диагностику</a>
+        <div class="pain-cta-main">
+          <p>Если узнали себя — приходите на разбор вашей ситуации: увидим ключевые точки работы и слепые зоны, наметим конкретное направление движения.</p>
+          <a href="#final-cta" class="btn btn-primary">Записаться на разбор</a>
+        </div>
+        <div class="pain-cta-practice">
+          <p class="pain-cta-note">Бесплатно в Telegram: видео + практика<br>«Почему я саботирую свою цель — и как начать действовать»</p>
+          <a
+            href="https://t.me/raliyagovoritbot"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-ghost"
+          >Получить практику</a>
+        </div>
       </div>
     </div>
   </section>

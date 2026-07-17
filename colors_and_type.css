@@ -18,7 +18,7 @@
   --moss:   #6E2233;   /* primary action — burgundy (all buttons + highlighted tier) */
   --clay:   #6E2233;   /* functional accent — burgundy (caps, checks, links, H1 phrase, FAQ +, quote bar) */
   --sand:   #E8DDC8;   /* subtle bg, dividers — warm beige */
-  --fog:    #666158;   /* secondary text — warm gray (AA: 5.4:1 on bone/cream, 4.6:1 on sand) */
+  --fog:    #7C766C;   /* secondary text — warm gray */
   --gold:   #D9A24A;   /* decorative accent — gold. DECOR ONLY (numerals, roman, hairline, tier label) */
   --cream:  #F8EFE6;   /* tint bg — pale apricot */
   --footer-bg: #3A2330; /* dark footer */
@@ -107,7 +107,7 @@
   --shadow-subtle: 0 1px 2px rgba(26, 24, 20, 0.04);
   --shadow-soft:   0 2px 8px rgba(26, 24, 20, 0.06);
   --shadow-lift:   0 8px 24px rgba(26, 24, 20, 0.08);
-  --shadow-focus:  0 0 0 3px rgba(110, 34, 51, 0.4);   /* burgundy — keyboard focus ring */
+  --shadow-focus:  0 0 0 3px rgba(63, 78, 54, 0.25);   /* moss */
 
   /* ── Motion ─────────────────────────────────────────────────────── */
   --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);   /* @kind other */

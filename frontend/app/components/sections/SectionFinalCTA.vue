@@ -10,11 +10,17 @@ const form = reactive<ContactFormData>({
 })
 
 const submitted = ref(false)
+const successRef = ref<HTMLElement | null>(null)
 
 async function onSubmit() {
   if (!form.name.trim() || !form.contact.trim()) return
   const res = await submit(form)
-  if (res.ok) submitted.value = true
+  if (res.ok) {
+    submitted.value = true
+    // Move focus to the confirmation so screen-reader / keyboard users land on it
+    await nextTick()
+    successRef.value?.focus()
+  }
 }
 
 function reset() {
@@ -29,27 +35,25 @@ function reset() {
   <section id="final-cta" class="bg-cream" style="padding-block: 96px;">
     <div class="container">
       <div class="final reveal" style="margin-bottom: 56px;">
-        <p
-          class="section-eyebrow"
-          style="color: var(--clay); margin: 0 0 18px; padding-left: 0.55em;"
-        >
-          Первая встреча
-        </p>
-        <h2>Готовы выстроить опору на себя?</h2>
+        <h2>Готовы к новым результатам?</h2>
       </div>
 
-      <div v-if="submitted" class="form-block reveal" style="text-align: center;">
-        <p
-          class="pull-italic"
-          style="font-size: 32px; color: var(--clay); margin: 0 0 12px;"
-        >
+      <div
+        v-if="submitted"
+        ref="successRef"
+        class="form-block reveal"
+        style="text-align: center; outline: none;"
+        role="status"
+        tabindex="-1"
+      >
+        <p class="pull-italic" style="font-size: 32px; color: var(--clay); margin: 0 0 12px;">
           Получила! 🌿
         </p>
         <p class="intro" style="font-weight: 400;">
-          Спасибо, что решились на этот шаг. Я уже вижу вашу заявку и напишу вам в Telegram сегодня - обычно в течение часа в рабочее время. Жду нашу встречу.
+          Спасибо, что решились на этот шаг. Я уже вижу вашу заявку и отвечу вам лично в Telegram — обычно в течение нескольких часов.
         </p>
         <p class="helper" style="margin-top: 16px;">
-          С теплом, Ралия - и подпишитесь на
+          С теплом, Ралия — и подпишитесь на
           <a
             href="https://t.me/raliyagovorit"
             target="_blank"
@@ -72,7 +76,7 @@ function reset() {
         class="form-block reveal"
         @submit.prevent="onSubmit"
       >
-        <p class="intro">Напишите, как вас зовут и как с вами связаться. Я отвечу лично в течение нескольких часов.</p>
+        <p class="intro">Оставьте контакт —<br>за 20 минут разберём вашу ситуацию и наметим первый шаг.<br>Отвечу лично в течение нескольких часов.</p>
 
         <label>
           <span class="label-text">Как вас зовут <span class="req">*</span></span>
@@ -93,16 +97,15 @@ function reset() {
         </label>
 
         <label>
-          <span class="label-text">Что у вас сильнее всего болит?</span>
+          <span class="label-text">С чем хотите разобраться?</span>
           <textarea
             v-model="form.note"
             rows="3"
-            placeholder="2–3 строки - по желанию"
+            placeholder="2–3 строки — по желанию"
           ></textarea>
-          <span class="helper">Поможет мне подготовиться к встрече.</span>
         </label>
 
-        <p v-if="result && !result.ok" style="font-family: var(--font-sans); font-size: 14px; color: var(--clay); margin: 0;">
+        <p v-if="result && !result.ok" role="alert" style="font-family: var(--font-sans); font-size: 14px; color: var(--clay); margin: 0;">
           {{ result.message }}
         </p>
 
@@ -110,7 +113,7 @@ function reset() {
           type="submit"
           class="btn btn-primary"
           :disabled="loading || !form.name.trim() || !form.contact.trim()"
-          style="align-self: flex-start;"
+          style="align-self: center;"
         >
           {{ loading ? 'Отправляем…' : 'Отправить заявку' }}
         </button>

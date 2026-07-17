@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<!-- @dsCard group="UI Kit — Landing" name="UI Kit · Landing" subtitle="v2 — magazine masthead, TOC, scroll progress, slimmer pain section, pricing comparison table, drop cap on hero lede" viewport="1280x1100" -->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ралия Говорит — UI Kit recreation</title>
+  <template id="__bundler_thumbnail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+      <rect width="400" height="400" fill="#F8F4EC"/>
+      <text x="200" y="232" font-family="Georgia, serif" font-style="italic" font-size="180" fill="#6E2233" text-anchor="middle">Р</text>
+      <circle cx="278" cy="150" r="14" fill="#D9A24A"/>
+    </svg>
+  </template>
+  <link rel="stylesheet" href="../../colors_and_type.css">
+  <link rel="icon" href="../../assets/favicon.svg">
+  <style>
+    /* ── v2 — editorial-magazine treatment ─────────────────────────── */
+    /* Rule: ONE typeface visually. Onest = 90%. Cormorant = H1 + 2 pull-
+       quotes + final CTA + recurring wordmark. Italic editorial budget
+       = 4 moments. Wordmark italic is recurring identity, separate.  */
+
+    body { margin: 0; background: var(--bone); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    /* Layout primitives */
+    .container { max-width: var(--max-wide, 1180px); margin: 0 auto; padding: 0 24px 0 24px; }
+    @media (min-width: 768px) { .container { padding: 0 56px 0 56px; } }
+    .text { max-width: var(--max-text); }
+    .narrow { max-width: var(--max-narrow); margin-inline: auto; }
+
+    /* Section bands */
+    section { padding-block: 80px; position: relative; }
+    @media (min-width: 768px) { section { padding-block: 128px; } }
+    section.tight { padding-block: 64px; }
+    @media (min-width: 768px) { section.tight { padding-block: 96px; } }
+    section.bg-paper { background: var(--paper); }
+    section.bg-sand  { background: var(--sand); }
+    section.bg-cream { background: var(--cream); }
+
+    /* Section header — Roman numeral + eyebrow + headline */
+    .section-head {
+      display: grid; grid-template-columns: 1fr; gap: 4px;
+      margin-bottom: 32px; max-width: 60ch;
+    }
+    @media (min-width: 768px) {
+      .section-head { grid-template-columns: 80px 1fr; gap: 0 32px; margin-bottom: 56px; }
+    }
+    .section-num {
+      font-family: var(--font-display); font-weight: 400;
+      font-size: 16px; line-height: 1; color: var(--clay);
+      letter-spacing: 0.06em;
+    }
+    @media (min-width: 768px) {
+      .section-num {
+        font-size: 14px; padding-top: 12px;
+        border-top: 1px solid var(--clay); margin-top: 0;
+        align-self: start;
+      }
+    }
+    .section-eyebrow {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 400;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--graphit);
+      opacity: .62;
+      margin: 0 0 12px;
+    }
+    /* Hero eyebrow stays on one line at any width — shrink to fit on mobile */
+    .hero-eyebrow {
+      font-size: clamp(8px, 2.5vw, 11px);
+      letter-spacing: 0.14em;
+    }
+    @media (min-width: 768px) { .hero-eyebrow { letter-spacing: 0.16em; } }
+    .section-title {
+      font-family: var(--font-sans); font-weight: 600;
+      font-size: 28px; line-height: 1.18; letter-spacing: -0.02em;
+      color: var(--ink); margin: 0;
+    }
+    @media (min-width: 768px) { .section-title { font-size: 38px; } }
+    .section-lede {
+      font-family: var(--font-sans); font-size: 17px; line-height: 1.55;
+      color: rgba(26,24,20,.78); max-width: 56ch; margin: 16px 0 0;
+    }
+    /* Hard line breaks kept on one line each (desktop) — no wrap */
+    @media (min-width: 768px) {
+      .nowrap-lines { white-space: nowrap; max-width: none; }
+    }
+
+    /* Reveal-on-scroll (subtle, no slide) */
+    .reveal { opacity: 0; transition: opacity .9s var(--ease-out-soft) .05s; }
+    .reveal.in { opacity: 1; }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; } }
+
+    /* Nav with scroll progress */
+    .nav-bar {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(248, 244, 236, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--sand);
+    }
+    .scroll-progress {
+      position: absolute; left: 0; bottom: -1px; height: 1px;
+      background: var(--clay); width: 0%;
+      transition: width .15s linear;
+    }
+    .nav-inner {
+      max-width: var(--max-wide); margin: 0 auto; padding: 14px 24px 14px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    @media (min-width: 768px) { .nav-inner { padding: 16px 56px 16px 56px; } }
+    .nav-logo {
+      font-family: var(--font-display); font-style: italic; font-weight: 400;
+      font-size: 22px; line-height: 1; color: var(--ink); text-decoration: none;
+      letter-spacing: -0.005em;
+    }
+    .nav-links { display: none; gap: 28px; list-style: none; padding: 0; margin: 0; }
+    @media (min-width: 768px) { .nav-links { display: flex; } }
+    .nav-links a {
+      font-family: var(--font-sans); font-size: 14px; color: var(--fog);
+      text-decoration: none; transition: color .2s var(--ease-out-soft);
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: var(--font-sans); font-weight: 500; font-size: 15px;
+      padding: 8px 20px; min-height: 38px; border-radius: var(--r-sm);
+      border: 0; cursor: pointer; text-decoration: none;
+      transition: background-color .2s var(--ease-out-soft), color .2s var(--ease-out-soft), box-shadow .2s var(--ease-out-soft);
+    }
+    .btn-primary { background: var(--moss); color: var(--paper); }
+    .btn-primary:hover { background: color-mix(in oklab, var(--moss) 88%, black); }
+    .btn-gold { background: var(--burgundy); color: #FFFFFF; }
+    .btn-gold:hover { background: color-mix(in oklab, var(--burgundy) 88%, black); }
+    .btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+    .btn-secondary:hover { background: var(--ink); color: var(--paper); }
+    .btn-sm { font-size: 13px; padding: 6px 14px; min-height: 32px; }
+    .btn-ghost { background: transparent; color: var(--burgundy); border: 1px solid color-mix(in oklab, var(--burgundy) 40%, transparent); padding: 8px 18px; }
+    .btn-ghost:hover { background: color-mix(in oklab, var(--burgundy) 8%, transparent); border-color: var(--burgundy); }
+    .btn-on-moss { background: var(--paper); color: var(--burgundy); }
+    .btn-on-moss:hover { background: var(--cream); }
+
+    /* ─── Decorative GOLD overrides (numerals, roman, hairlines, tier label) ─── */
+    .section-num { color: var(--gold); }
+    @media (min-width: 768px) { .section-num { border-top-color: var(--gold); } }
+    .index-item .num { color: var(--gold); }
+    .pain-col li .marker { color: var(--gold); }
+    .num { color: var(--gold); }
+    .method-step + .method-step::before { background: var(--gold); }
+    .scroll-progress { background: var(--gold); }
+    .popular-corner { color: #E8C9A8; }
+
+    /* ─── HERO — magazine masthead + asymmetric grid ─── */
+    .masthead {
+      border-top: 1px solid rgba(26,24,20,.5);
+      border-bottom: 1px solid var(--sand);
+      padding: 14px 0;
+    }
+    .masthead-inner {
+      max-width: var(--max-wide); margin: 0 auto; padding: 0 24px;
+      display: flex; flex-wrap: nowrap; align-items: center;
+      justify-content: space-between; gap: 8px 20px;
+    }
+    @media (min-width: 768px) { .masthead-inner { padding: 0 56px; } }
+    .masthead-line {
+      font-family: var(--font-sans); font-size: clamp(7px, 1.7vw, 11px); font-weight: 400;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--graphit);
+      opacity: .55;
+      white-space: nowrap;
+    }
+    @media (min-width: 768px) { .masthead-line { letter-spacing: 0.2em; } }
+    .masthead-line .accent { color: var(--burgundy); opacity: 1; }
+
+    .hero { padding-top: 28px; padding-bottom: 88px; position: relative; }
+    .hero-corner {
+      position: absolute; top: 18px; right: 24px; margin: 0;
+      font-family: var(--font-sans); font-size: 10px; font-weight: 400;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--fog);
+    }
+    @media (min-width: 768px) { .hero-corner { top: 22px; right: 56px; font-size: 11px; } }
+    .hero-corner .accent { color: var(--burgundy); }
+    .hero-eyebrow-sub {
+      font-family: var(--font-sans); font-size: 13px; font-weight: 400;
+      letter-spacing: 0; text-transform: none; color: var(--fog);
+      margin: 6px 0 32px; max-width: 48ch;
+    }
+    @media (min-width: 768px) { .hero { padding-top: 20px; padding-bottom: 128px; } }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr; gap: 36px;
+    }
+    .hero-text { display: flex; flex-direction: column; gap: 28px; }
+    .hero-image { margin-top: 0; }
+    @media (max-width: 1023px) {
+      .hero-grid { gap: 0; }
+      .hero-image { transform: translateY(-76px); margin-bottom: -76px; }
+    }
+    @media (min-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: minmax(0,55fr) minmax(0,45fr);
+        column-gap: 56px; align-items: stretch;
+      }
+      .hero-text { min-width: 0; justify-content: flex-start; }
+      .hero-image { height: 100%; margin-top: 0; transform: translateY(-72px); }
+    }
+    .h1 {
+      font-family: var(--font-display); font-weight: 500;
+      font-size: 34px; line-height: 1.08; letter-spacing: -0.015em;
+      color: var(--ink); margin: 0 0 12px; max-width: none;
+    }
+    @media (min-width: 768px) { .h1 { font-size: 50px; } }
+    @media (min-width: 1024px) { .h1 { font-size: 62px; } }
+    /* Italic moment 1 of 4 */
+    .h1 em { font-style: italic; color: var(--burgundy); font-weight: 500; }
+    .h1 br { display: none; }
+    @media (min-width: 768px) { .h1 br { display: inline; } }
+
+    /* Hero lede — editorial: clay left rule, key phrases lifted to ink */
+    .hero-lede {
+      font-family: var(--font-sans); font-weight: 400;
+      font-size: 18px; line-height: 1.6;
+      color: rgba(26,24,20,.7); max-width: 54ch; margin: 0;
+      padding-left: 22px; position: relative;
+    }
+    @media (min-width: 768px) { .hero-lede { font-size: 19px; } }
+    @media (min-width: 1024px) { .hero-lede { max-width: none; } }
+    @media (min-width: 1024px) { .hero-lede { white-space: nowrap; } }
+    .hero-lede::first-letter {
+      font-family: inherit; font-weight: inherit;
+      font-size: inherit; line-height: inherit; float: none;
+      padding: 0; color: inherit;
+    }
+    /* Single continuous clay rule spanning both lede paragraphs */
+    .hero-lede-wrap { position: relative; padding-left: 22px; margin-top: 38px; }
+    .hero-lede-wrap::before {
+      content: ''; position: absolute; left: 0; top: 4px; bottom: 4px;
+      width: 2px; background: var(--clay); border-radius: 2px;
+    }
+    .hero-lede-wrap .hero-lede { padding-left: 0; }
+    .hero-lede strong { font-weight: 500; color: var(--ink); }
+    /* Response paragraph — quieter, sits below the claim */
+    .hero-lede--response {
+      color: var(--fog); margin-top: 14px;
+    }
+    .hero-lede br { display: none; }
+    @media (min-width: 768px) { .hero-lede br { display: inline; } }
+
+    .hero-meta {
+      font-family: var(--font-sans); font-size: 18px; color: rgba(42,37,31,.82); line-height: 1.6;
+      max-width: 54ch; margin-top: 0; padding-top: 0;
+      border-top: 0;
+    }
+    /* Hero CTA row — button + byline inline */
+    .hero-cta-row {
+      display: flex; flex-wrap: wrap; align-items: center;
+      gap: 16px 24px; margin-top: 0;
+    }
+    .hero-cta-row .hero-byline {
+      margin: 0; padding: 0; border: 0;
+    }
+    .hero-cta-meta {
+      font-family: var(--font-sans); font-size: 13px; color: var(--fog);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .hero-cta-meta::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--moss); display: inline-block;
+    }
+
+    .hero-byline {
+      margin-top: 0; padding: 8px 0; max-width: none;
+      font-family: var(--font-sans); font-size: 11px; font-weight: 400;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--graphit);
+      display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+    }
+    .hero-byline a { color: var(--graphit); text-decoration: none; border-bottom: 1px solid var(--burgundy); padding-bottom: 1px; }
+    .hero-byline a:hover { border-bottom-color: var(--graphit); }
+    .hero-byline span.dot { color: var(--burgundy); opacity: .5; }
+
+    .portrait {
+      aspect-ratio: 1/1; max-width: 380px;
+      position: relative; margin-inline: auto;
+    }
+    @media (min-width: 1024px) {
+      .hero-image { height: 100%; display: flex; align-items: stretch; }
+      .portrait { aspect-ratio: auto; max-width: 460px; width: 100%; height: 100%; min-height: 0; margin-left: auto; padding-top: 0; padding-bottom: 0; box-sizing: border-box; }
+      .portrait img { object-fit: cover; object-position: 50% 0%; }
+    }
+    .portrait img {
+      width: 100%; height: 100%; object-fit: contain; object-position: 50% 100%;
+      display: block;
+    }
+    .portrait .label {
+      position: absolute; bottom: 14px; left: 16px;
+      font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--fog);
+    }
+    .portrait-credit {
+      font-family: var(--font-sans); font-size: 11px; color: var(--fog);
+      letter-spacing: 0.06em; margin: 12px 0 0; max-width: 340px; margin-left: auto;
+      display: flex; justify-content: space-between; text-transform: uppercase;
+    }
+    .portrait-credit em { font-style: italic; color: rgba(107,113,101,.7); }
+
+    /* ─── INDEX (table of contents — magazine convention) ─── */
+    .index-bar { background: var(--paper); border-block: 1px solid var(--sand); padding: 0; }
+    .index-grid {
+      max-width: var(--max-wide); margin: 0 auto; padding: 0 24px;
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    @media (min-width: 768px) {
+      .index-grid { padding: 0 56px; grid-template-columns: repeat(6, 1fr); }
+    }
+    .index-item {
+      padding: 20px 12px; border-right: 1px solid var(--sand);
+      text-decoration: none; color: var(--ink);
+      transition: background-color .2s var(--ease-out-soft);
+      border-top: 1px solid var(--sand);
+    }
+    .index-item:first-child, .index-item:nth-child(2) { border-top: 0; }
+    @media (min-width: 768px) {
+      .index-item { padding: 24px 16px; border-top: 0; }
+      .index-item:nth-child(6) { border-right: 0; }
+    }
+    .index-item:nth-child(2n) { border-right: 0; }
+    @media (min-width: 768px) { .index-item:nth-child(2n) { border-right: 1px solid var(--sand); } }
+    .index-item:hover { background: var(--bone); }
+    .index-item .num {
+      font-family: var(--font-display); font-size: 13px; color: var(--clay);
+      letter-spacing: 0.06em; display: block; margin-bottom: 4px;
+    }
+    .index-item .label {
+      font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+      color: var(--ink); line-height: 1.3;
+    }
+
+    /* ─── PAIN POINTS — slimmed to 8 quotes total ─── */
+    .pain-grid {
+      display: grid; grid-template-columns: 1fr; gap: 0;
+    }
+    @media (min-width: 768px) {
+      .pain-grid { grid-template-columns: 1fr 1fr; gap: 0 64px; }
+    }
+    .pain-col ul { list-style: none; margin: 0; padding: 0; }
+    .pain-col li {
+      padding: 22px 0; border-top: 1px solid var(--sand);
+      font-family: var(--font-sans); font-weight: 400;
+      font-size: 18px; line-height: 1.45; letter-spacing: -0.005em;
+      color: var(--ink); display: grid;
+      grid-template-columns: 32px 1fr; gap: 16px;
+    }
+    @media (min-width: 768px) { .pain-col li { font-size: 19px; } }
+    .pain-col li:first-child { border-top: 0; padding-top: 6px; }
+    .pain-col li .marker {
+      font-family: var(--font-display); font-size: 14px; color: var(--clay);
+      padding-top: 4px; letter-spacing: 0.04em;
+    }
+    .pain-cta {
+      margin-top: 64px; padding-top: 32px;
+      border-top: 1px solid rgba(26,24,20,.15);
+      max-width: var(--max-text);
+    }
+    @media (min-width: 900px) {
+      .pain-cta {
+        max-width: none; display: block;
+      }
+    }
+    .pain-cta-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 38px; margin-top: 24px; }
+    .pain-cta-actions .btn { min-width: 240px; padding: 8px 20px; min-height: 38px; }
+    .pain-cta-practice { display: flex; flex-direction: column; gap: 24px; align-items: flex-start; }
+    .pain-cta-note { font-family: var(--font-sans); font-size: 13px; color: var(--fog); margin: 0; max-width: none; line-height: 1.45; }
+    .pain-cta-note br { display: none; }
+    @media (min-width: 700px) { .pain-cta-note br { display: inline; } }
+    .pain-cta p {
+      font-family: var(--font-sans); font-weight: 500; font-size: 18px;
+      line-height: 1.45; color: var(--ink); margin: 0 0 24px;
+      max-width: 50ch;
+    }
+    @media (min-width: 768px) { .pain-cta p { margin: 0; } }
+
+    /* ─── METHOD ─── */
+    .method-grid {
+      display: grid; grid-template-columns: 1fr; gap: 36px;
+      margin-top: 8px;
+    }
+    @media (min-width: 768px) { .method-grid { grid-template-columns: repeat(3, 1fr); gap: 48px; } }
+    .method-step { position: relative; }
+    @media (min-width: 768px) {
+      .method-step + .method-step::before {
+        content: ''; position: absolute; left: -28px; top: 36px;
+        width: 8px; height: 1px; background: var(--clay);
+      }
+    }
+    .num {
+      font-family: var(--font-display); font-weight: 300;
+      font-size: 56px; line-height: 1; color: var(--clay);
+      margin-bottom: 12px;
+    }
+    @media (min-width: 768px) { .num { font-size: 80px; } }
+
+    .method-twocol {
+      display: grid; grid-template-columns: 1fr; gap: 40px;
+      margin-top: 80px; max-width: var(--max-text);
+    }
+    @media (min-width: 768px) { .method-twocol { grid-template-columns: 1fr 1fr; gap: 64px; } }
+    .method-twocol ul { list-style: none; margin: 0; padding: 0; display:flex; flex-direction:column; gap: 12px; }
+    .method-twocol li { display: flex; gap: 14px; font-family: var(--font-sans); font-size: 15px; line-height: 1.55; }
+    .method-twocol li span:first-child { color: var(--clay); flex-shrink: 0; font-weight: 500; }
+    .method-twocol .neutral li span:first-child { color: rgba(107,113,101,.5); }
+    .method-twocol .neutral li { color: var(--fog); }
+
+    /* ─── PROMISE — single editorial card, 2 columns inside ─── */
+    .promise-card {
+      background: var(--paper); border-radius: var(--r-md);
+      padding: 36px 28px; box-shadow: var(--shadow-soft);
+      display: grid; grid-template-columns: 1fr; gap: 36px;
+    }
+    @media (min-width: 768px) {
+      .promise-card { padding: 56px; grid-template-columns: 1fr 1fr; gap: 56px; }
+    }
+    .promise-card ul { list-style: none; margin: 0; padding: 0; display:flex; flex-direction:column; gap:12px; }
+    .promise-card li {
+      display: grid; grid-template-columns: 18px 1fr; gap: 12px;
+      font-family: var(--font-sans); font-size: 16px; line-height: 1.5; color: rgba(26,24,20,.9);
+    }
+    .promise-card li .check { color: var(--moss); flex-shrink: 0; font-weight: 600; }
+    .promise-card .col + .col { padding-top: 0; }
+    @media (max-width: 767px) {
+      .promise-card .col + .col { padding-top: 28px; border-top: 1px solid var(--sand); }
+    }
+    .promise-col-eyebrow {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      margin: 0 0 18px; padding-bottom: 10px; border-bottom: 1px solid var(--sand);
+    }
+    .promise-col-eyebrow.moss { color: var(--moss); }
+    .promise-col-eyebrow.clay { color: var(--clay); }
+
+    /* ─── CREDENTIALS ─── */
+    .creds-grid {
+      display: grid; grid-template-columns: 1fr; gap: 40px; align-items: start;
+    }
+    @media (min-width: 1100px) { .creds-grid { grid-template-columns: 7fr 5fr; gap: 64px; align-items: start; } }
+    .creds-list { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-direction: column; max-width: 60ch; }
+    .creds-list li {
+      display: grid; grid-template-columns: 18px 1fr; gap: 16px;
+      padding: 18px 0; border-top: 1px solid rgba(26,24,20,.12);
+      font-family: var(--font-sans); font-size: 15px; line-height: 1.5; color: rgba(26,24,20,.9);
+    }
+    .creds-list li:first-child { border-top: 0; padding-top: 0; }
+    .creds-list li .dash { color: var(--clay); flex-shrink: 0; font-weight: 500; }
+    .creds-list li strong { font-weight: 600; color: var(--ink); }
+
+    .creds-portrait {
+      aspect-ratio: 4/5; max-width: 440px; margin-inline: auto;
+      border-radius: var(--r-lg);
+      background: linear-gradient(135deg, #E8DDC8 0%, #FAEFE2 60%, #E8DDC8 100%);
+      position: relative; overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+    .creds-portrait .label {
+      position: absolute; bottom: 14px; left: 16px;
+      font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--fog);
+    }
+
+    .creds-quote {
+      margin-top: 36px; padding-top: 28px;
+      border-top: 1px solid rgba(26,24,20,.12); max-width: 50ch;
+      font-family: var(--font-sans); font-weight: 500;
+      font-size: 19px; line-height: 1.45; color: var(--ink);
+    }
+
+    /* Certificate display — replaces lifestyle portrait in credentials */
+    .creds-cert {
+      margin: 0 auto; padding: 12px;
+      background: var(--paper); border-radius: var(--r-md);
+      box-shadow: var(--shadow-soft); max-width: 520px;
+    }
+    @media (min-width: 1100px) { .creds-cert { margin-top: 120px; } }
+    .creds-cert img {
+      display: block; width: 100%; height: auto;
+      border-radius: var(--r-sm);
+    }
+    .creds-cert figcaption {
+      display: flex; justify-content: space-between; gap: 12px;
+      padding: 12px 6px 4px;
+      font-family: var(--font-sans); font-size: 11px;
+      letter-spacing: 0.04em; color: var(--fog);
+    }
+
+    /* ─── SERVICES — magazine pricing comparison ─── */
+    .free-card {
+      background: var(--paper); border-radius: var(--r-md);
+      padding: 28px; box-shadow: var(--shadow-soft); margin-bottom: 56px;
+      display: grid; grid-template-columns: 1fr; gap: 20px;
+    }
+    @media (min-width: 768px) {
+      .free-card { padding: 40px; grid-template-columns: 1fr auto; align-items: center; gap: 40px; }
+    }
+    .free-card .free-eyebrow {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--clay);
+      margin: 0 0 10px;
+    }
+    .free-card h3 {
+      font-family: var(--font-sans); font-weight: 600;
+      font-size: 24px; line-height: 1.2; color: var(--ink); margin: 0 0 10px;
+    }
+    .free-card p {
+      font-family: var(--font-sans); font-size: 15px; line-height: 1.55;
+      color: rgba(26,24,20,.78); margin: 0; max-width: 44ch;
+    }
+
+    /* Strategic session — detailed offer card */
+    .offer-card {
+      background: var(--paper); border-radius: var(--r-md);
+      padding: 28px; box-shadow: var(--shadow-soft); margin-bottom: 56px;
+    }
+    @media (min-width: 768px) { .offer-card { padding: 40px; } }
+    .offer-card .offer-head {
+      display: grid; grid-template-columns: 1fr; gap: 6px;
+      padding-bottom: 20px; margin-bottom: 24px;
+      border-bottom: 1px solid var(--sand);
+    }
+    @media (min-width: 768px) {
+      .offer-card .offer-head { grid-template-columns: 1fr auto; align-items: baseline; gap: 6px 24px; }
+    }
+    .offer-card .offer-eyebrow {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--clay);
+      margin: 0 0 10px; grid-column: 1 / -1;
+    }
+    .offer-card h3 {
+      font-family: var(--font-sans); font-weight: 600;
+      font-size: 22px; line-height: 1.2; color: var(--ink); margin: 0;
+    }
+    @media (min-width: 768px) { .offer-card h3 { font-size: 24px; } }
+    .offer-card .offer-meta {
+      font-family: var(--font-sans); font-size: 14px; color: var(--fog); margin: 0;
+    }
+    .offer-card .offer-sub {
+      font-family: var(--font-sans); font-size: 15px; line-height: 1.55;
+      color: rgba(26,24,20,.78); margin: 0 0 24px; max-width: 56ch;
+    }
+    .offer-card .offer-incl-label {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--fog);
+      margin: 0 0 14px;
+    }
+    .offer-card ul {
+      list-style: none; margin: 0 0 28px; padding: 0;
+      display: grid; grid-template-columns: 1fr; gap: 10px; max-width: 64ch;
+    }
+    .offer-card li {
+      display: grid; grid-template-columns: 18px 1fr; gap: 12px;
+      font-family: var(--font-sans); font-size: 15px; line-height: 1.5; color: rgba(26,24,20,.9);
+    }
+    .offer-card li .check { color: var(--moss); font-weight: 600; }
+
+    /* Pricing comparison table (replaces 3-card pack) */
+    .pricing-table {
+      background: var(--paper); border-radius: var(--r-md);
+      box-shadow: var(--shadow-soft); overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .pricing-rows {
+      display: grid; grid-template-columns: 1fr;
+    }
+    @media (min-width: 768px) { .pricing-rows { grid-template-columns: 1.2fr 1fr 1fr 1fr; } }
+
+    .pricing-cell { padding: 24px 20px; border-top: 1px solid var(--sand); }
+    @media (min-width: 768px) {
+      .pricing-cell { padding: 28px 24px; border-top: 1px solid var(--sand); border-left: 1px solid var(--sand); }
+      .pricing-cell:nth-child(4n+1) { border-left: 0; }
+      .pricing-cell.row-1 { border-top: 0; }
+    }
+    .pricing-cell.label-cell {
+      font-family: var(--font-sans); font-size: 13px; font-weight: 500;
+      letter-spacing: 0.04em; color: var(--fog);
+      background: var(--bone);
+    }
+    .pricing-cell.label-cell .row-label {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--fog);
+    }
+    .pricing-cell.label-cell .row-sub {
+      font-family: var(--font-sans); font-size: 14px; color: rgba(26,24,20,.7);
+      margin-top: 4px; line-height: 1.4;
+    }
+
+    .pricing-cell.tier { position: relative; }
+    .pricing-cell.tier.popular { background: var(--moss); color: var(--paper); }
+    .pricing-cell.tier .tier-name {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--clay);
+      margin: 0 0 6px;
+    }
+    .pricing-cell.tier.popular .tier-name { color: rgba(250,239,226,.85); }
+    .pricing-cell.tier .price {
+      font-family: var(--font-display); font-weight: 300;
+      font-size: 44px; line-height: 1; color: var(--ink); margin: 0;
+    }
+    .pricing-cell.tier.popular .price { color: var(--cream); }
+    .pricing-cell.tier .price .ruble { font-size: 16px; vertical-align: top; margin-left: 4px; opacity: .8; }
+    .pricing-cell.tier .meta-line {
+      font-family: var(--font-sans); font-size: 13px; color: var(--fog); margin: 6px 0 0;
+    }
+    .pricing-cell.tier.popular .meta-line { color: rgba(250,239,226,.78); }
+    .pricing-cell.tier .body-line {
+      font-family: var(--font-sans); font-size: 14px; line-height: 1.5;
+      color: rgba(26,24,20,.85); margin: 0;
+    }
+    .pricing-cell.tier.popular .body-line { color: rgba(255,255,255,.95); }
+    /* Row 3 "included" merged into one cell spanning the three tier columns */
+    @media (min-width: 768px) { .pricing-incl-span { grid-column: 2 / -1; } }
+    .pricing-incl-span .body-line { text-align: center; }
+
+    .pricing-cell.popular-flag {
+      background: var(--moss); color: var(--paper); padding: 8px 24px;
+      font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; text-align: center;
+    }
+    @media (min-width: 768px) { .pricing-cell.popular-flag { display: none; } }
+    .popular-corner {
+      display: none; position: absolute; top: 12px; right: 14px;
+      font-family: var(--font-sans); font-size: 9px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; color: rgba(250,239,226,.85);
+    }
+    @media (min-width: 768px) { .popular-corner { display: block; } }
+
+    .pricing-cta-row {
+      margin-bottom: 56px; display: grid; grid-template-columns: 1fr; gap: 12px;
+    }
+    @media (min-width: 768px) { .pricing-cta-row { grid-template-columns: 1.2fr 1fr 1fr 1fr; } }
+    .pricing-cta-row > * { padding: 0 20px; }
+    @media (min-width: 768px) { .pricing-cta-row > * { padding: 0 24px; } }
+    .pricing-cta-row .label-empty { display: none; }
+    @media (min-width: 768px) { .pricing-cta-row .label-empty { display: block; } }
+    .pricing-cta-single { margin-bottom: 56px; display: grid; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .pricing-cta-single { grid-template-columns: 1.2fr 1fr 1fr 1fr; } }
+    .pricing-cta-single .spacer { display: none; }
+    @media (min-width: 768px) { .pricing-cta-single .spacer { display: block; grid-column: span 1; } }
+    .pricing-cta-single .btn { width: 100%; grid-column: 2 / -1; box-sizing: border-box; }
+    @media (max-width: 767px) { .pricing-cta-single .btn { grid-column: auto; } }
+
+    /* Mastermind + included strip */
+    .extras-grid {
+      display: grid; grid-template-columns: 1fr; gap: 20px;
+    }
+    .extras-card {
+      padding: 32px; border-radius: var(--r-md);
+      background: var(--cream);
+    }
+    .extras-card.dark { background: var(--ink); color: var(--bone); }
+    .extras-card .extras-eyebrow {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--clay);
+      margin: 0 0 16px;
+    }
+    .extras-card.dark .extras-eyebrow { color: rgba(248,244,236,.6); }
+    .extras-card h3 {
+      font-family: var(--font-sans); font-weight: 600;
+      font-size: 20px; line-height: 1.25; color: inherit; margin: 0 0 12px;
+    }
+    .extras-card p { font-family: var(--font-sans); font-size: 14px; line-height: 1.55; color: rgba(26,24,20,.78); margin: 0 0 16px; }
+    .extras-card.dark p { color: rgba(248,244,236,.75); }
+    .extras-card ul { list-style: none; margin: 0 0 16px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
+    .extras-card li { font-family: var(--font-sans); font-size: 13px; color: inherit; display: grid; grid-template-columns: 14px 1fr; gap: 8px; }
+    .extras-card li .check { color: var(--moss); flex-shrink: 0; font-weight: 600; }
+    .extras-card.dark li .check { color: var(--clay); }
+    .extras-card .meta { font-family: var(--font-sans); font-size: 12px; color: var(--fog); margin: 0; }
+    .extras-card.dark .meta { color: rgba(248,244,236,.55); }
+
+    /* ─── CASE / pull-quotes — bigger editorial treatment ─── */
+    @media (min-width: 768px) {
+      .case-article { padding-left: 76px; }
+      .case-brief { padding-left: 76px; }
+    }
+    .case-article {
+      max-width: 64ch; margin-bottom: 48px;
+    }
+    .case-article p {
+      font-family: var(--font-sans); font-size: 17px; line-height: 1.7;
+      color: rgba(26, 24, 20, 0.85); margin: 0 0 18px;
+    }
+    .case-article p.bold { font-weight: 500; color: var(--ink); }
+
+    /* Case intro — request + patterns worked through */
+    .case-brief {
+      display: grid; grid-template-columns: 1fr; gap: 28px;
+      max-width: 64ch; margin-bottom: 40px;
+      padding-bottom: 36px; border-bottom: 1px solid rgba(26,24,20,.12);
+    }
+    @media (min-width: 768px) { .case-brief { grid-template-columns: 1fr 1fr; gap: 40px; } }
+    .case-brief .brief-eyebrow {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--clay);
+      margin: 0 0 14px; padding-bottom: 10px; border-bottom: 1px solid var(--sand);
+    }
+    .case-brief .brief-text {
+      font-family: var(--font-sans); font-size: 16px; line-height: 1.6;
+      color: rgba(26,24,20,.85); margin: 0;
+    }
+    .case-brief ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .case-brief li {
+      display: grid; grid-template-columns: 18px 1fr; gap: 12px;
+      font-family: var(--font-sans); font-size: 15px; line-height: 1.45; color: rgba(26,24,20,.9);
+    }
+    .case-brief li .dash { color: var(--clay); font-weight: 500; }
+
+    /* Case results — concrete steps + client quotes */
+    .results-label {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--clay);
+      margin: 36px 0 16px;
+    }
+    .results-actions { list-style: none; margin: 0 0 28px; padding: 0; display: flex; flex-direction: column; gap: 12px; max-width: 60ch; }
+    .results-actions li {
+      display: grid; grid-template-columns: 20px 1fr; gap: 12px;
+      font-family: var(--font-sans); font-size: 16px; line-height: 1.5; color: rgba(26,24,20,.9);
+    }
+    .results-actions li .check { color: var(--moss); font-weight: 600; }
+    .client-quote {
+      font-family: var(--font-sans); font-weight: 500;
+      font-size: 18px; line-height: 1.45; letter-spacing: -0.005em;
+      color: var(--ink); margin: 0 0 18px; max-width: 56ch;
+      padding-left: 18px; border-left: 2px solid var(--burgundy);
+    }
+    @media (min-width: 768px) { .client-quote { font-size: 20px; } }
+
+    /* Pull quote — italic Cormorant. Italic moments 2 + 3 */
+    .pull-quote {
+      font-family: var(--font-display); font-style: italic; font-weight: 400;
+      font-size: 30px; line-height: 1.15; letter-spacing: -0.005em;
+      color: var(--moss); margin: 40px 0; max-width: 26ch;
+      padding-left: 0; position: relative;
+    }
+    @media (min-width: 768px) { .pull-quote { font-size: 40px; max-width: 22ch; } }
+    .pull-quote::before {
+      content: '«'; position: absolute; left: -0.5em; top: -0.05em;
+      color: var(--clay); font-style: italic;
+    }
+    .pull-quote::after { content: '»'; color: var(--clay); }
+    .pull-quote.case-voice::before, .pull-quote.case-voice::after { content: none; }
+    .pull-quote.clay { color: var(--clay); }
+
+    .case-article .strong-line {
+      font-family: var(--font-sans); font-weight: 500;
+      font-size: 19px; line-height: 1.45; color: var(--ink);
+      margin: 32px 0; max-width: 56ch;
+      padding-left: 16px; border-left: 2px solid var(--burgundy);
+    }
+    @media (min-width: 768px) { .case-article .strong-line { font-size: 22px; padding-left: 20px; } }
+
+    .case-article-credit {
+      font-family: var(--font-sans); font-size: 13px; color: var(--fog);
+      margin-top: 32px;
+    }
+    .case-article-credit a {
+      color: var(--ink); text-decoration: underline;
+      text-decoration-color: var(--clay); text-underline-offset: 4px;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      display: grid; grid-template-columns: 1fr; gap: 20px;
+    }
+    @media (min-width: 768px) { .testimonials { grid-template-columns: repeat(3, 1fr); gap: 28px; } }
+    .testimonial {
+      background: var(--bone); border-radius: var(--r-md); padding: 28px;
+      box-shadow: var(--shadow-subtle);
+      display: flex; flex-direction: column; height: 100%;
+    }
+    .testimonial blockquote {
+      margin: 0 0 24px; font-family: var(--font-sans);
+      font-size: 16px; line-height: 1.6; color: var(--ink); flex: 1;
+    }
+    .testimonial blockquote::before { content: '“'; color: var(--clay); font-family: var(--font-display); font-size: 28px; line-height: 0; vertical-align: -8px; margin-right: 4px; }
+    .testimonial footer {
+      display: flex; align-items: center; gap: 12px;
+      padding-top: 16px; border-top: 1px solid var(--sand);
+    }
+    .testimonial footer .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, #E8DDC8, #FAEFE2); flex-shrink: 0;
+    }
+
+    /* ─── COACHING QUESTIONS ─── */
+    .question-row {
+      display: grid; grid-template-columns: 56px 1fr; gap: 16px;
+      padding: 28px 0; border-top: 1px solid rgba(26,24,20,.12);
+      align-items: baseline;
+    }
+    @media (min-width: 768px) { .question-row { grid-template-columns: 96px 1fr; gap: 24px; padding: 36px 0; } }
+    .question-row:first-of-type { border-top: 0; padding-top: 12px; }
+    .question-row .num { font-size: 44px; margin: 0; line-height: 1; }
+    @media (min-width: 768px) { .question-row .num { font-size: 64px; } }
+    .question-row h3 {
+      font-family: var(--font-sans); font-weight: 600;
+      font-size: 19px; line-height: 1.3; letter-spacing: -0.01em;
+      color: var(--ink); margin: 0 0 8px;
+    }
+    @media (min-width: 768px) { .question-row h3 { font-size: 24px; } }
+    .question-row p {
+      font-family: var(--font-sans); font-size: 15px; line-height: 1.55;
+      color: rgba(26,24,20,.7); margin: 0; max-width: 50ch;
+    }
+
+    /* ─── FAQ ─── */
+    .faq details {
+      padding: 22px 0; border-bottom: 1px solid rgba(26,24,20,.15);
+    }
+    .faq details:last-of-type { border-bottom: 0; }
+    .faq summary {
+      list-style: none; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 24px;
+      font-family: var(--font-sans); font-weight: 600;
+      font-size: 17px; line-height: 1.3; color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    @media (min-width: 768px) { .faq summary { font-size: 20px; } }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq .toggle {
+      flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 24px; color: var(--clay);
+      transition: transform .3s var(--ease-out-soft), background-color .2s var(--ease-out-soft);
+    }
+    .faq summary:hover .toggle { background: var(--cream); }
+    .faq details[open] .toggle { transform: rotate(45deg); }
+    .faq .answer {
+      margin-top: 14px; max-width: 64ch;
+      font-family: var(--font-sans); font-size: 16px; line-height: 1.65;
+      color: rgba(26, 24, 20, 0.78);
+    }
+
+    /* ─── FINAL CTA ─── */
+    .final {
+      max-width: var(--max-narrow); margin-inline: auto; text-align: center;
+    }
+    /* Italic moment 4 of 4 */
+    .final h2 {
+      font-family: var(--font-display); font-style: italic; font-weight: 400;
+      font-size: 40px; line-height: 1.05; color: var(--ink);
+      margin: 0 0 24px;
+    }
+    @media (min-width: 768px) { .final h2 { font-size: 60px; } }
+    .final-meta { font-family: var(--font-sans); font-size: 13px; color: var(--fog); margin: 14px 0 56px; }
+
+    .form-block { text-align: left; display: flex; flex-direction: column; gap: 28px; max-width: 520px; margin-inline: auto; }
+    .form-block label { display: block; }
+    .form-block .label-text {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--fog);
+      display: block; margin-bottom: 10px;
+    }
+    .form-block .label-text .req { color: var(--clay); }
+    .form-block input, .form-block textarea {
+      width: 100%; padding: 12px 0; background: transparent;
+      border: 0; border-bottom: 1px solid rgba(26,24,20,.3);
+      font-family: var(--font-sans); font-size: 17px; color: var(--ink);
+      outline: none; resize: none;
+      transition: border-color .2s var(--ease-out-soft);
+    }
+    .form-block input::placeholder, .form-block textarea::placeholder { color: rgba(107,113,101,.55); }
+    .form-block input:focus, .form-block textarea:focus { border-bottom-color: var(--ink); }
+    .form-block .helper { font-family: var(--font-sans); font-size: 13px; color: var(--fog); margin-top: 8px; }
+    .form-block .intro { font-family: var(--font-sans); font-weight: 500; font-size: 17px; line-height: 1.5; color: var(--ink); margin: 0 auto; text-align: center; max-width: 660px; }
+    .form-block .intro br { display: none; }
+    @media (min-width: 720px) { .form-block .intro br { display: inline; } }
+    .form-block .form-privacy { font-family: var(--font-sans); font-size: 13px; color: var(--fog); margin: 4px 0 0; }
+
+    /* Trust plaque — compact testimonial teaser before prices */
+    .trust-band { padding-block: 56px; background: color-mix(in oklab, var(--burgundy) 8%, var(--bone)); }
+    @media (min-width: 768px) { .trust-band { padding-block: 72px; } }
+    .trust-card {
+      max-width: var(--max-text); margin-inline: auto;
+    }
+    .trust-badge {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--fog);
+      margin: 0 0 20px;
+    }
+    .trust-quote {
+      font-family: var(--font-display); font-style: italic; font-weight: 400;
+      font-size: 24px; line-height: 1.28; letter-spacing: -0.005em;
+      color: var(--ink); margin: 0; padding-left: 20px;
+      border-left: 2px solid var(--burgundy);
+    }
+    @media (min-width: 768px) { .trust-quote { font-size: 30px; } }
+    .trust-foot {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 24px; margin-top: 16px; padding-left: 22px; flex-wrap: wrap;
+    }
+    .trust-attrib {
+      font-family: var(--font-sans); font-size: 14px; color: var(--fog);
+      margin: 0;
+    }
+    .trust-link {
+      font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+      color: var(--burgundy); text-decoration: none;
+    }
+    .trust-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .trust-case-line {
+      font-family: var(--font-sans); font-weight: 500; font-size: 17px;
+      line-height: 1.5; color: var(--ink); margin: 0 0 16px;
+      padding-left: 20px; border-left: 2px solid var(--burgundy); max-width: 60ch;
+    }
+    @media (min-width: 768px) { .trust-case-line { font-size: 19px; } }
+    .trust-card .trust-link { margin-left: 22px; }
+
+    /* Promise-section closing client quote */
+    .promise-proof {
+      margin-top: 40px; padding: 28px 28px 28px 24px;
+      background: var(--cream); border-left: 3px solid var(--burgundy);
+      border-radius: var(--r-sm); max-width: var(--max-text);
+    }
+    .promise-proof-quote {
+      font-family: var(--font-display); font-style: italic; font-weight: 400;
+      font-size: 22px; line-height: 1.3; letter-spacing: -0.005em;
+      color: var(--ink); margin: 0;
+    }
+    @media (min-width: 768px) { .promise-proof-quote { font-size: 26px; } }
+    .promise-proof-attrib {
+      font-family: var(--font-sans); font-size: 14px; color: var(--fog); margin: 14px 0 0;
+    }
+
+    /* Lead-magnet band — Telegram practice */
+    .practice-band { padding-block: 56px; background: var(--cream); }
+    @media (min-width: 768px) { .practice-band { padding-block: 72px; } }
+    .practice-inner {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 24px;
+    }
+    @media (min-width: 768px) {
+      .practice-inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 48px; }
+    }
+    .practice-eyebrow {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--fog); margin: 0 0 12px;
+    }
+    .practice-title {
+      font-family: var(--font-display); font-weight: 400;
+      font-size: 28px; line-height: 1.15; letter-spacing: -0.005em;
+      color: var(--ink); margin: 0 0 10px;
+    }
+    @media (min-width: 768px) { .practice-title { font-size: 34px; } }
+    .practice-desc {
+      font-family: var(--font-sans); font-size: 16px; line-height: 1.55;
+      color: var(--ink); margin: 0; max-width: 52ch;
+    }
+    .practice-inner .btn { flex-shrink: 0; }
+
+    /* Footer */
+    footer.site-footer { background: #4A1622; color: var(--bone); padding: 64px 0; }
+    .footer-grid {
+      display: grid; grid-template-columns: 1fr; gap: 36px; margin-bottom: 40px;
+    }
+    @media (min-width: 768px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; gap: 48px; } }
+    /* Wordmark italic — recurring identity, separate from the 4 editorial italic moments */
+    .footer-wordmark { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 32px; margin: 0 0 14px; color: var(--bone); line-height: 1; }
+    .footer-grid p, .footer-grid a, .footer-grid li {
+      font-family: var(--font-sans); font-size: 14px; line-height: 1.55; color: rgba(248,244,236,.7);
+    }
+    .footer-grid ul { list-style: none; margin: 0; padding: 0; display:flex; flex-direction:column; gap:10px; }
+    .footer-grid a { text-decoration: none; transition: color .2s var(--ease-out-soft); color: rgba(248,244,236,.9); }
+    .footer-grid a:hover { color: var(--clay); }
+    .footer-eyebrow { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(248,244,236,.5); font-weight:500; display:block; margin-bottom: 16px; }
+    .footer-bottom { padding-top: 28px; border-top: 1px solid rgba(248,244,236,.15); display: flex; flex-direction: column; gap: 12px; }
+    @media (min-width: 768px) { .footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; } }
+    .footer-bottom p { font-family: var(--font-sans); font-size: 12px; color: rgba(248,244,236,.5); margin: 0; }
+    .footer-bottom .signoff { font-size: 14px; color: rgba(248,244,236,.85); font-style: normal; }
+
+    /* Sticky mobile CTA */
+    .sticky-cta {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+      padding: 12px 16px; background: rgba(248,244,236,.96);
+      backdrop-filter: blur(8px); border-top: 1px solid var(--sand);
+      box-shadow: 0 -8px 24px rgba(26,24,20,.06);
+      transform: translateY(100%); transition: transform .3s var(--ease-out-soft);
+    }
+    .sticky-cta.visible { transform: translateY(0); }
+    .sticky-cta .btn { width: 100%; }
+    @media (min-width: 768px) { .sticky-cta { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- ─────────────── NAV with scroll progress ─────────────── -->
+<header class="nav-bar">
+  <nav class="nav-inner" aria-label="Главное меню" style="padding-block: 12px;">
+    <a class="nav-logo" href="#hero">Ралия Хабирова</a>
+    <ul class="nav-links">
+      <li><a href="#whom">Для кого</a></li>
+      <li><a href="#method">Метод</a></li>
+      <li><a href="#services">Форматы</a></li>
+      <li><a href="#case">Отзывы</a></li>
+      <li><a href="#faq">Вопросы</a></li>
+    </ul>
+  </nav>
+  <div class="scroll-progress" id="scrollProgress"></div>
+</header>
+
+<main>
+
+<!-- ─────────────── HERO ─────────────── -->
+<section id="hero" class="hero">
+  <div class="container">
+    <p class="hero-corner"><span class="accent">№ 01</span> · 2026 · Казань — Бали</p>
+    <p class="section-eyebrow hero-eyebrow">Коуч ACC ICF</p>
+    <p class="hero-eyebrow-sub">реализация и самоценность для экспертов</p>
+
+    <h1 class="h1">
+      Перестать <em>бороться с собой</em> —<br>и наконец двигаться туда,<br>куда давно хочется
+    </h1>
+
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="hero-lede-wrap">
+        <p class="hero-lede">Работаю с экспертами и предпринимательницами,<br>которые устали от внутреннего давления,<br>обесценивания себя и самосаботажа.</p>
+        </div>
+
+        <p class="hero-meta">Я не даю советов и готовых ответов — помогаю вам через контакт с собой и пошаговую структуру честно признать, чего вы хотите, выдержать сопротивление, найти решение и устойчиво внедрить перемены в жизнь. В своём подходе объединяю коучинг по стандартам ICF и техники работы с эмоциональным интеллектом.</p>
+
+        <div class="hero-cta-row">
+          <a href="#final-cta" class="btn btn-gold">Разобрать свою ситуацию</a>
+          <a href="https://t.me/raliyagovoritbot" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">Начать с практики</a>
+        </div>
+        <p class="hero-byline" style="margin-top: 20px;">
+          <a href="https://t.me/raliyagovorit" target="_blank" rel="noopener noreferrer">@raliyagovorit</a>
+          <span class="dot">·</span> ACC ICF
+          <span class="dot">·</span> Кейсы и отзывы
+        </p>
+      </div>
+
+      <div class="hero-image">
+        <figure class="portrait">
+          <img src="../../assets/portrait-hero-cut.png" alt="Ралия Хабирова — коуч ACC ICF">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ─────────────── I · PAIN POINTS ─────────────── -->
+<section id="whom">
+  <div class="container">
+    <header class="section-head reveal">
+      <div class="section-num">I</div>
+      <div>
+        <p class="section-eyebrow">Для кого</p>
+        <h2 class="section-title nowrap-lines">Узнаёте себя в одной из этих фраз?</h2>
+        <p class="section-lede nowrap-lines">Я собрала восемь самых частых запросов, с которыми ко мне приходят:</p>
+      </div>
+    </header>
+
+    <div class="pain-grid reveal">
+      <div class="pain-col">
+        <ul>
+          <li><span class="marker">01</span><span>«Я понимаю, чего хочу, но не могу начать действовать.»</span></li>
+          <li><span class="marker">02</span><span>«Хочу сменить направление, но страшно — а вдруг ошибусь.»</span></li>
+          <li><span class="marker">03</span><span>«Часть меня хочет роста, другая часть — саботирует.»</span></li>
+          <li><span class="marker">04</span><span>«Я могу действовать, но быстро выгораю.»</span></li>
+        </ul>
+      </div>
+      <div class="pain-col">
+        <ul>
+          <li><span class="marker">05</span><span>«Старый способ работы больше не работает, новый не выстроен.»</span></li>
+          <li><span class="marker">06</span><span>«Хочу больше — и одновременно боюсь ответственности.»</span></li>
+          <li><span class="marker">07</span><span>«Чувствую постоянную борьбу с собой и напряжение.»</span></li>
+          <li><span class="marker">08</span><span>«Хочу двигаться не через давление, а через согласие с собой.»</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pain-cta reveal">
+      <p>Если узнали себя — приходите на разбор вашей ситуации:<br>увидим ключевые точки работы и слепые зоны,<br>наметим конкретное направление движения.</p>
+      <div class="pain-cta-actions">
+        <a href="#final-cta" class="btn btn-primary">Записаться на разбор</a>
+        <div class="pain-cta-practice">
+          <p class="pain-cta-note">Бесплатно в Telegram: видео + практика<br>«Почему я саботирую свою цель — и как начать действовать»</p>
+          <a href="https://t.me/raliyagovoritbot" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">Получить практику</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── II · METHOD ─────────────── -->
+<section id="method" class="bg-paper">
+  <div class="container">
+    <header class="section-head reveal">
+      <div class="section-num">II</div>
+      <div>
+        <p class="section-eyebrow">Метод</p>
+        <h2 class="section-title nowrap-lines">Я помогаю вам найти ваши ответы,<br>решить внутренние конфликты и<br>начать действовать в согласии с собой.</h2>
+        <p class="section-lede nowrap-lines">Коучинг по стандартам ICF — про ориентацию на решения, а не на поиск причин.<br>Я объединяю его с эмоциональным интеллектом: благодаря чему удаётся эффективнее<br>работать с вашей целью и с сопротивлением, которое поднимается в ответ.</p>
+      </div>
+    </header>
+
+    <p class="section-eyebrow reveal" style="color:var(--clay); margin: 8px 0 0;">Как проходит сессия</p>
+    <div class="method-grid reveal">
+      <div class="method-step">
+        <div class="num">01</div>
+        <h3 style="font-family: var(--font-sans); font-weight:600; font-size:20px; margin:0 0 10px; letter-spacing:-0.01em; color:var(--ink);">Уточняем цель</h3>
+        <p style="font-family: var(--font-sans); font-size:15px; line-height:1.6; color:rgba(26,24,20,.78); margin:0; max-width:34ch;">В начале сессии формулируем цель так, чтобы это было именно то, с чем вы хотите уйти в конце сессии.</p>
+      </div>
+      <div class="method-step">
+        <div class="num">02</div>
+        <h3 style="font-family: var(--font-sans); font-weight:600; font-size:20px; margin:0 0 10px; letter-spacing:-0.01em; color:var(--ink);">Удерживаем фокус</h3>
+        <p style="font-family: var(--font-sans); font-size:15px; line-height:1.6; color:rgba(26,24,20,.78); margin:0; max-width:34ch;">По ходу сессии я возвращаю вас к этой цели. Моя задача — помочь вам сконцентрироваться, посмотреть на цель и на себя с разных сторон, найти свои ответы в безопасной среде без оценки.</p>
+      </div>
+      <div class="method-step">
+        <div class="num">03</div>
+        <h3 style="font-family: var(--font-sans); font-weight:600; font-size:20px; margin:0 0 10px; letter-spacing:-0.01em; color:var(--ink);">Закрепляем результат</h3>
+        <p style="font-family: var(--font-sans); font-size:15px; line-height:1.6; color:rgba(26,24,20,.78); margin:0; max-width:34ch;">В конце анализируем, насколько мы продвинулись, и заземляем инсайты в конкретные шаги.</p>
+      </div>
+    </div>
+
+    <div class="method-twocol reveal">
+      <div class="neutral">
+        <p class="section-eyebrow" style="margin: 0 0 16px;">Что я не делаю</p>
+        <ul>
+          <li><span>—</span><span>Не выдаю готовых советов</span></li>
+          <li><span>—</span><span>Не обещаю «исцелить за 5 сессий»</span></li>
+          <li><span>—</span><span>Не выстраиваю позицию «учитель — ученик»</span></li>
+          <li><span>—</span><span>Не работаю с тяжёлой клиникой; направлю к психотерапевту</span></li>
+        </ul>
+      </div>
+      <div>
+        <p class="section-eyebrow" style="color:var(--clay); margin: 0 0 16px;">Что я делаю</p>
+        <ul>
+          <li><span>—</span><span>Вникаю в конкретику вашей ситуации</span></li>
+          <li><span>—</span><span>Работаю в партнёрстве</span></li>
+          <li><span>—</span><span>Даю инструменты и практики между сессиями</span></li>
+          <li><span>—</span><span>Задаю неудобные вопросы</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="promise-proof reveal">
+      <blockquote class="promise-proof-quote">«Было очень бережно, вовлечённо и профессионально. В ходе сессии мы выяснили, в чём моя основная сложность и на что обращать внимание.»</blockquote>
+      <p class="promise-proof-attrib">— из отзывов клиентов</p>
+    </div>
+
+    <p class="reveal" style="font-family: var(--font-sans); font-size: 13px; color: var(--fog); margin: 24px 0 0; max-width: var(--max-text);">Коуч, психолог или ментор — в чём разница, рассказываю в разделе <a href="#faq-roles" style="color: var(--burgundy); text-decoration: underline; text-underline-offset: 3px;">«Вопросы»</a>.</p>
+  </div>
+</section>
+
+<!-- ─────────────── III · PROMISE ─────────────── -->
+<section id="promise">
+  <div class="container">
+    <header class="section-head reveal">
+      <div class="section-num">III</div>
+      <div>
+        <p class="section-eyebrow">Что вы получите</p>
+        <h2 class="section-title nowrap-lines">К концу работы у вас будут не «инсайты»,<br>а конкретные результаты.</h2>
+      </div>
+    </header>
+
+    <div class="promise-card reveal">
+      <div class="col">
+        <p class="promise-col-eyebrow moss">На сессиях мы сможем</p>
+        <ul>
+          <li><span class="check">✓</span><span>Увидеть, где вы себя тормозите и что за этим стоит</span></li>
+          <li><span class="check">✓</span><span>Прояснить цель и понять, что для вас действительно важно</span></li>
+          <li><span class="check">✓</span><span>Разложить хаос мыслей в понятную структуру</span></li>
+          <li><span class="check">✓</span><span>Превратить намерение в реалистичный план действий</span></li>
+          <li><span class="check">✓</span><span>Снизить влияние внутреннего критика</span></li>
+          <li><span class="check">✓</span><span>Найти способ двигаться без давления и борьбы с собой</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <p class="promise-col-eyebrow clay">Что у вас будет на руках</p>
+        <ul>
+          <li><span class="check" style="color:var(--clay);">✓</span><span>Чёткая формулировка цели и приоритетов</span></li>
+          <li><span class="check" style="color:var(--clay);">✓</span><span>Структурированный анализ текущей точки</span></li>
+          <li><span class="check" style="color:var(--clay);">✓</span><span>Карта ограничивающих стратегий мышления</span></li>
+          <li><span class="check" style="color:var(--clay);">✓</span><span>Конкретный и реалистичный план действий</span></li>
+          <li><span class="check" style="color:var(--clay);">✓</span><span>Меньше самосаботажа</span></li>
+          <li><span class="check" style="color:var(--clay);">✓</span><span>Устойчивость в принятии решений</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── IV · CREDENTIALS ─────────────── -->
+<section id="credentials" class="bg-sand">
+  <div class="container">
+    <div class="creds-grid">
+      <div class="reveal">
+        <header class="section-head" style="margin-bottom: 24px;">
+          <div class="section-num">IV</div>
+          <div>
+            <p class="section-eyebrow">Образование</p>
+            <h2 class="section-title nowrap-lines" style="font-size: 30px; max-width: none;">Я работаю на основе постоянной практики<br>как сертифицированный эксперт и коуч ICF.</h2>
+          </div>
+        </header>
+
+        <p class="section-eyebrow" style="color:var(--clay); margin: 0 0 16px;">Обучение</p>
+        <ul class="creds-list" style="margin-top: 0;">
+          <li><span class="dash">—</span><span>Бакалавр «Международные отношения»</span></li>
+          <li><span class="dash">—</span><span>Магистратура «Психология образования»</span></li>
+          <li><span class="dash">—</span><span>Опыт преподавателя эмоционального интеллекта в международной школе</span></li>
+          <li><span class="dash">—</span><span><strong>Сертификация ACC ICF</strong> — Associate Certified Coach: 60+ часов обучения и 100+ часов практики</span></li>
+        </ul>
+
+        <p class="creds-quote">Как помогающий практик я постоянно обучаюсь и прохожу личную терапию с 2020 года.</p>
+      </div>
+      <div class="reveal">
+        <figure class="creds-cert">
+          <img src="../../assets/certificate-icf.jpeg" alt="Сертификат ICF — BE a COACH, Level 1, 100 часов, Human Capital. Выдан Ралии Хабировой 03.07.2024">
+          <figcaption><span>Certificate of Completion · ICF Level 1</span><span>2024</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── TRUST PLAQUE · teaser before prices ─────────────── -->
+<!-- ─────────────── V · SERVICES ─────────────── -->
+<section id="services">
+  <div class="container">
+    <div class="trust-card reveal" style="margin-bottom: 56px;">
+      <p class="trust-case-line">Реальный кейс · 5 сессий: от страха публичных выступлений — к регулярным эфирам и твёрдому экспертному голосу.</p>
+      <a href="#case" class="trust-link">Полный кейс →</a>
+    </div>
+
+    <header class="section-head reveal">
+      <div class="section-num">V</div>
+      <div>
+        <p class="section-eyebrow">С чего начать</p>
+        <h2 class="section-title">Форматы работы</h2>
+      </div>
+    </header>
+
+    <div class="offer-card reveal">
+      <div class="offer-head">
+        <p class="offer-eyebrow">Шаг 1 · Стратегическая сессия</p>
+        <h3>Стратегическая сессия — 7 000 ₽</h3>
+        <p class="offer-meta">2 встречи · 4 часа работы над вашим запросом</p>
+      </div>
+      <p class="offer-sub">Подойдёт, если важно быстро разобраться в ситуации и получить ясность.</p>
+      <p class="offer-incl-label">Что входит</p>
+      <ul>
+        <li><span class="check">✓</span><span>Мы разберём вашу текущую ситуацию, определим точку А и точку Б</span></li>
+        <li><span class="check">✓</span><span>Наметим ключевые точки работы: основные препятствия и слепые зоны</span></li>
+        <li><span class="check">✓</span><span>Сформулируем конкретную стратегию движения и первые шаги</span></li>
+        <li><span class="check">✓</span><span>Анализ ресурсов и точек опоры</span></li>
+        <li><span class="check">✓</span><span>При необходимости — список вопросов для предварительной самостоятельной работы</span></li>
+        <li><span class="check">✓</span><span>Итоговая сессия с конкретными шагами и понятным планом дальнейших действий</span></li>
+      </ul>
+      <a href="#final-cta" class="btn btn-primary">Записаться</a>
+    </div>
+
+    <p class="section-eyebrow reveal" style="margin: 0 0 16px;">Шаг 2 · Пакеты коуч-сессий</p>
+    <p class="section-lede reveal" style="margin: 0 0 28px; max-width: 64ch;">Индивидуальная работа с фокусом на ваших задачах и движении: мы быстрее находим точные решения, определяем ключевые шаги и выстраиваем реализацию без внутреннего саботажа.</p>
+    <div class="pricing-table reveal">
+      <div class="pricing-rows">
+        <!-- Row 1: tier names + prices -->
+        <div class="pricing-cell label-cell row-1">
+          <span class="row-label">Пакет</span>
+          <p class="row-sub">Цена за весь курс. Можно начать с любого.</p>
+        </div>
+        <div class="pricing-cell tier row-1">
+          <p class="tier-name">Ясность</p>
+          <p class="price">15 000<span class="ruble">₽</span></p>
+          <p class="meta-line">3 сессии · 3–4 недели</p>
+        </div>
+        <div class="pricing-cell tier popular row-1">
+          <span class="popular-corner">Чаще выбирают</span>
+          <p class="tier-name">Опора</p>
+          <p class="price">23 000<span class="ruble">₽</span></p>
+          <p class="meta-line">5 сессий · 6–8 недель</p>
+        </div>
+        <div class="pricing-cell tier row-1">
+          <p class="tier-name">Устойчивость</p>
+          <p class="price">40 000<span class="ruble">₽</span></p>
+          <p class="meta-line">10 сессий · 10–12 недель</p>
+        </div>
+
+        <!-- Row 2: what you get -->
+        <div class="pricing-cell label-cell">
+          <span class="row-label">Подходит</span>
+          <p class="row-sub">Если хотите попробовать формат и сделать первый шаг</p>
+        </div>
+        <div class="pricing-cell tier"><p class="body-line">Первый сдвиг и ясность с одной целью.</p></div>
+        <div class="pricing-cell tier popular"><p class="body-line">Видимые изменения в убеждениях и поведении.</p></div>
+        <div class="pricing-cell tier"><p class="body-line">Глубокая проработка отношений с собой, целями и опорой.</p></div>
+
+        <!-- Row 3: included -->
+        <div class="pricing-cell label-cell">
+          <span class="row-label">Что входит</span>
+          <p class="row-sub">В каждый пакет — одинаково</p>
+        </div>
+        <div class="pricing-cell tier pricing-incl-span"><p class="body-line">Сессия 60 мин, резюме, практики, контакт между сессиями</p></div>
+      </div>
+    </div>
+
+    <div class="pricing-cta-single reveal">
+      <div class="spacer"></div>
+      <a href="#final-cta" class="btn btn-primary">Записаться</a>
+    </div>
+
+    <p class="reveal" style="font-family: var(--font-sans); font-size: 13px; color: var(--fog); margin: 0 0 40px; max-width: var(--max-text);">Сколько нужно сессий и есть ли гарантия результата — в разделе <a href="#faq-sessions" style="color: var(--burgundy); text-decoration: underline; text-underline-offset: 3px;">«Вопросы»</a>.</p>
+
+    <div class="extras-grid reveal">
+      <div class="extras-card">
+        <p class="extras-eyebrow">Шаг 3 · Группа</p>
+        <h3>Мастермайнд — 1 500 ₽ за встречу</h3>
+        <p>Группа 5–8 человек. 10 встреч по 90 минут раз в неделю. Старт 15 июля. Полный цикл — 15 000 ₽.</p>
+        <a href="#final-cta" class="btn btn-secondary btn-sm">Записаться</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── VI · CASE ─────────────── -->
+<section id="case" class="bg-paper">
+  <div class="container">
+    <header class="section-head reveal">
+      <div class="section-num">VI</div>
+      <div>
+        <p class="section-eyebrow">Реальный кейс · 5 коуч-сессий</p>
+        <h2 class="section-title">Что меняется после нашей работы</h2>
+      </div>
+    </header>
+
+    <div class="case-brief reveal">
+      <div>
+        <p class="brief-eyebrow">Запрос на работу</p>
+        <p class="brief-text">Справиться со страхом публичных выступлений, прийти к бóльшей проявленности и уверенности, начать действовать из искренней потребности заботы о себе.</p>
+      </div>
+      <div>
+        <p class="brief-eyebrow">Паттерны, с которыми работали</p>
+        <ul>
+          <li><span class="dash">—</span><span>Внутренний критик</span></li>
+          <li><span class="dash">—</span><span>Неэффективная коммуникация с аудиторией</span></li>
+          <li><span class="dash">—</span><span>Страх отвержения</span></li>
+          <li><span class="dash">—</span><span>Стратегия наказывать себя за провалы</span></li>
+          <li><span class="dash">—</span><span>Чувство недостоинства и стыда</span></li>
+          <li><span class="dash">—</span><span>Страх перед людьми более высокого ранга</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <article class="case-article reveal">
+      <p>Уже к пятой сессии она легче соглашается на публичные активности в узком кругу:</p>
+
+      <p class="pull-quote case-voice" style="font-weight: 600; font-size: 22px; max-width: none; text-align: center; margin-left: 50%; transform: translateX(-50%); display: table;"><span style="display:block; white-space:nowrap;">«Я чувствую, как ко мне возвращается</span><span style="display:block; white-space:nowrap;">мой твёрдый экспертный уверенный голос»</span></p>
+
+      <p class="results-label">Конкретные шаги, на которые она решилась</p>
+      <ul class="results-actions">
+        <li><span class="check">✓</span><span>Регулярные прямые эфиры и модерация вебинаров с важными людьми</span></li>
+        <li><span class="check">✓</span><span>Запись 10-минутной видеопрезентации для канала</span></li>
+        <li><span class="check">✓</span><span>Организация и проведение офлайн-мероприятия</span></li>
+      </ul>
+
+      <p class="strong-line">Ценность своего ресурса и времени, принятие решений из заботы о себе.</p>
+
+      <p class="client-quote">«Приходит много возможностей, но я соглашаюсь только на те, которые соответствуют моему ресурсу»</p>
+      <p class="client-quote">«Выбор себя: я тщательнее выбираю, с кем работать, отказываюсь от того, что мне не подходит — конфликтного клиента, некомфортных коллабораций»</p>
+
+      <p>Через исследование уровня контакта и готовности контактировать с аудиторией установлен более открытый диалог с подписчиками и фокус на подготовку продукта.</p>
+
+      <p class="client-quote">«Я выбираю новый формат взаимодействия с аудиторией»</p>
+
+      <p class="case-article-credit">— Ралия Хабирова, <a href="https://telegra.ph/Kejs---rezultat-5-kouch-sessij-12-23" target="_blank" rel="noopener noreferrer">полный кейс →</a></p>
+    </article>
+
+    <div class="reveal">
+      <p class="section-eyebrow" style="margin: 64px 0 24px;">Отзывы клиентов</p>
+      <div class="testimonials">
+        <article class="testimonial">
+          <blockquote>Я работал с коучем впервые, было опасение, что без доверия не смогу решить запрос. В итоге было максимально комфортно. Своими вопросами ты помогла мне разрешить ситуацию, где мной манипулируют. Больше не испытываю в общении такого дискомфорта.</blockquote>
+          <footer><div class="avatar"></div><p style="font-family:var(--font-sans); font-size:13px; color:var(--fog); margin:0; line-height:1.4;"><strong style="color:var(--ink); font-weight:500; display:block;">Клиент</strong>первый опыт с коучем</p></footer>
+        </article>
+        <article class="testimonial">
+          <blockquote>Благодаря поддержке Ралии я в ходе сессий смог принять важные решения о работе. Ралия — профессионал своего дела, внимательно слушает, смотрит на произнесённое с разных сторон и задаёт правильные вопросы. Давно не было настолько эффективных сессий с коучем.</blockquote>
+          <footer><div class="avatar"></div><p style="font-family:var(--font-sans); font-size:13px; color:var(--fog); margin:0; line-height:1.4;"><strong style="color:var(--ink); font-weight:500; display:block;">@Dvzasypkin</strong>3 сессии</p></footer>
+        </article>
+        <article class="testimonial">
+          <blockquote>Обратилась с запросом на достижение бизнес-цели. Сессии давали собранность и фокус — в спокойной мягкой атмосфере. Я выявила личные ограничения, которые тормозят меня, внедрила новые привычки и нашла вдохновляющую цель. Искренне рекомендую.</blockquote>
+          <footer><div class="avatar"></div><p style="font-family:var(--font-sans); font-size:13px; color:var(--fog); margin:0; line-height:1.4;"><strong style="color:var(--ink); font-weight:500; display:block;">@LoraUfa</strong>бизнес-цель</p></footer>
+        </article>
+        <article class="testimonial">
+          <blockquote>Спасибо за пространство доверия и принятия, которое привело меня к более глубоким размышлениям. За то, как ты показывала мне моё сопротивление и возвращала в вопрос, если я уклонялась от ответа. Твои чуткость и забота мне очень помогали!</blockquote>
+          <footer><div class="avatar"></div><p style="font-family:var(--font-sans); font-size:13px; color:var(--fog); margin:0; line-height:1.4;"><strong style="color:var(--ink); font-weight:500; display:block;">Клиентка</strong>после сессии</p></footer>
+        </article>
+        <article class="testimonial">
+          <blockquote>После твоей сессии у меня ушли эмоции и тревожность. Я подключилась к функции роли — была модератором эфира и оставалась в роли, без искажений и эмоций «про какая я не такая». У меня даже язык больше не поворачивается говорить, что я не публичный человек.</blockquote>
+          <footer><div class="avatar"></div><p style="font-family:var(--font-sans); font-size:13px; color:var(--fog); margin:0; line-height:1.4;"><strong style="color:var(--ink); font-weight:500; display:block;">Клиентка</strong>публичность</p></footer>
+        </article>
+        <article class="testimonial">
+          <blockquote>Было очень бережно, вовлечённо и профессионально! У меня сейчас переходный период, хотелось понять, как себя поддерживать, чтобы идти путь и не выгорать. В ходе сессии мы выяснили, в чём моя основная сложность и на что обращать внимание. Было очень ценно!</blockquote>
+          <footer><div class="avatar"></div><p style="font-family:var(--font-sans); font-size:13px; color:var(--fog); margin:0; line-height:1.4;"><strong style="color:var(--ink); font-weight:500; display:block;">Клиентка</strong>переходный период</p></footer>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── VII · QUESTIONS ─────────────── -->
+
+
+<!-- ─────────────── VIII · FAQ ─────────────── -->
+<section id="faq" class="bg-sand">
+  <div class="container">
+    <header class="section-head reveal">
+      <div class="section-num">VIII</div>
+      <div>
+        <p class="section-eyebrow">Частые вопросы</p>
+        <h2 class="section-title">Что обычно спрашивают</h2>
+      </div>
+    </header>
+
+    <div class="faq reveal" style="max-width: 80ch;">
+      <details>
+        <summary><span id="faq-roles">Коуч, психолог, ментор — в чём разница?</span><span class="toggle">+</span></summary>
+        <p class="answer">Коуч, ментор и психолог правда работают по-разному.</p>
+        <p class="answer" style="margin-top: 12px;"><strong>Психолог</strong> идёт в прошлое и в чувства: почему так сложилось, как пережить стресс, кризис, утрату, вернуть эмоциональное равновесие. Это про «залечить и восстановиться».</p>
+        <p class="answer" style="margin-top: 12px;"><strong>Ментор</strong> делится своим опытом в конкретной профессии: даёт советы, показывает, как он бы сделал — «научи, как ты умеешь».</p>
+        <p class="answer" style="margin-top: 12px;"><strong>Я, как коуч,</strong> не лечу и не раздаю советов «делай как я». Я помогаю вам найти свои ответы: сформулировать, чего вы на самом деле хотите, увидеть, что останавливает, и выстроить движение к цели.</p>
+        <p class="answer" style="margin-top: 12px;">Если совсем коротко: психолог — «почему так», ментор — «делай вот так», коуч — «а как хочешь ты». Ко мне приходят, когда есть силы двигаться вперёд. И если я увижу, что вам сейчас нужнее терапия — скажу прямо.</p>
+      </details>
+      <details>
+        <summary><span>Что такое ACC ICF и почему это важно?</span><span class="toggle">+</span></summary>
+        <p class="answer">ACC — Associate Certified Coach, первая ступень профессиональной сертификации International Coaching Federation. Чтобы её получить, нужно пройти 60+ часов специализированного обучения и подтвердить 100+ часов реальной коучинговой практики, плюс сдать экзамен. Это значит, что я работаю по этике и профессиональным стандартам, а не «прошла марафон и назвалась коучем».</p>
+      </details>
+      <details>
+        <summary><span>Я уже ходила к коучам. Чем ты отличаешься?</span><span class="toggle">+</span></summary>
+        <p class="answer">Ко мне приходят, когда прежняя стратегия мышления и действий уже не работает: не получается стабильно двигаться вперёд, мешают внутренние конфликты.</p>
+        <p class="answer" style="margin-top: 12px;">Я прошла этот путь сама и теперь помогаю клиентам действовать из внутреннего согласия, а не из давления и борьбы с собой.</p>
+        <p class="answer" style="margin-top: 12px;">В своём подходе я объединяю коучинг по стандартам ICF и опыт преподавателя эмоционального интеллекта. Я добавляю работу с эмоциями — потому что рядом с любой целью живёт что-то ещё: страх, сопротивление, «а вдруг не получится». Благодаря этому удаётся эффективнее двигаться к цели и опираться на своё состояние по дороге.</p>
+      </details>
+      <details>
+        <summary><span id="faq-sessions">Сколько сессий нужно, чтобы увидеть результат?</span><span class="toggle">+</span></summary>
+        <p class="answer">Это зависит от запроса и от того, как вы работаете с тем, что появляется между сессиями. Первые результаты — ясность в голове, новый взгляд на ситуацию, конкретные следующие шаги — появляются уже после первой-второй сессии. Более глубокие изменения в поведении и реакциях — за 4–8 сессий. Долгосрочные трансформации в самовосприятии — процесс нескольких месяцев. Я не обещаю фиксированный результат за фиксированное количество встреч — это противоречило бы честному коучингу. Но обещаю: каждая сессия даст вам что-то конкретное, с чем можно работать уже сегодня.</p>
+      </details>
+      <details>
+        <summary><span>Как с оплатой и рассрочкой?</span><span class="toggle">+</span></summary>
+        <p class="answer">Оплата картой или переводом. Для пакетов от 5 сессий доступна рассрочка: сумма делится на 2 части — первая до начала работы, вторая после второй сессии. Нужен другой формат — напишите, обсудим индивидуально.</p>
+        <p class="answer" style="margin-top: 12px;">Я работаю как самозанятая: оплата физическому лицу, чек выдаётся через приложение «Мой налог».</p>
+      </details>
+      <details>
+        <summary><span>Есть ли гарантия результата?</span><span class="toggle">+</span></summary>
+        <p class="answer">Коучинг по стандартам ICF не предполагает гарантий результата: он зависит не только от сессий, но и от того, что вы делаете между ними, насколько готовы встречаться с тем, что поднимается, и в каком темпе движетесь. Я не могу гарантировать конкретный доход, конкретное решение или конкретный срок.</p>
+        <p class="answer" style="margin-top: 12px;">Что я гарантирую — метод, бережное и глубокое исследование и включённость в каждую сессию, соблюдение стандартов ICF, полную конфиденциальность и пространство, где вы можете быть собой и двигаться в своём темпе. А результат рождается в паре: из моей работы и ваших шагов между встречами.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── FINAL CTA (Знакомство) — after FAQ ─────────────── -->
+<section id="final-cta" class="bg-cream" style="padding-block: 96px;">
+  <div class="container">
+    <div class="final reveal" style="margin-bottom: 56px;">
+      <h2 style="white-space: nowrap; margin-left: -38px;">Готовы к новым результатам?</h2>
+    </div>
+
+    <form class="form-block reveal" onsubmit="event.preventDefault();">
+      <p class="intro">Оставьте контакт —<br>за 20 минут разберём вашу ситуацию и наметим первый шаг.<br>Отвечу лично в течение нескольких часов.</p>
+      <label><span class="label-text">Как вас зовут <span class="req">*</span></span><input placeholder="Ваше имя" required></label>
+      <label><span class="label-text">Telegram или телефон <span class="req">*</span></span><input placeholder="@ваш_ник или номер телефона" required></label>
+      <label><span class="label-text">С чем хотите разобраться?</span><textarea rows="3" placeholder="2–3 строки — по желанию"></textarea></label>
+      <button type="submit" class="btn btn-primary" style="align-self: center;">Отправить заявку</button>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ─────────────── FOOTER ─────────────── -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-wordmark">Ралия Хабирова</p>
+        <p style="max-width:48ch;">Помогаю женщинам в жизненных и карьерных переходах честно признать, чего они хотят, и устойчиво внедрять перемены — через контакт с собой и пошаговую структуру.</p>
+      </div>
+      <div>
+        <span class="footer-eyebrow">Каналы</span>
+        <ul>
+          <li><a href="https://t.me/raliyagovorit" target="_blank" rel="noopener noreferrer">Telegram-канал →</a></li>
+          <li><a href="https://t.me/raliyaya" target="_blank" rel="noopener noreferrer">Запись @raliyaya →</a></li>
+          <li><a href="https://instagram.com/raliyagovorit" target="_blank" rel="noopener noreferrer">Instagram →</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="footer-eyebrow">Конфиденциальность</span>
+        <p>Гарантирую полную конфиденциальность всех сессий. Ваши данные не передаются третьим лицам.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Ралия Хабирова · ACC ICF · Казань — Бали</p>
+      <p class="signoff">От вашего отношения к себе зависит качество вашей жизни.<br>От вашей любви к себе зависит ваше благополучие.</p>
+    </div>
+  </div>
+</footer>
+
+<aside class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <a href="#final-cta" class="btn btn-primary">Разобрать свою ситуацию</a>
+</aside>
+
+<script>
+  // Sticky mobile CTA after hero
+  (function() {
+    var el = document.getElementById('stickyCta');
+    function check() {
+      var visible = window.scrollY > 600;
+      el.classList.toggle('visible', visible);
+      el.setAttribute('aria-hidden', !visible);
+    }
+    window.addEventListener('scroll', check, {passive: true});
+    check();
+  })();
+
+  // Scroll progress indicator
+  (function() {
+    var bar = document.getElementById('scrollProgress');
+    function update() {
+      var h = document.documentElement;
+      var pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+      bar.style.width = Math.min(100, Math.max(0, pct)) + '%';
+    }
+    window.addEventListener('scroll', update, {passive: true});
+    window.addEventListener('resize', update);
+    update();
+  })();
+
+  // Reveal-on-scroll
+  (function() {
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.reveal').forEach(function(e){ e.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.reveal').forEach(function(e){ io.observe(e); });
+  })();
+</script>
+
+</body>
+</html>

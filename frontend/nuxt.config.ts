@@ -41,33 +41,15 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'ru' },
-      title: 'Ралия Говорит — коуч по устойчивому росту, ACC ICF',
       titleTemplate: '%s',
+      // Title/description/OG/JSON-LD live in app.vue (single source of truth)
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'theme-color', content: '#F8F4EC' },
-        {
-          name: 'description',
-          content:
-            'Помогаю специалистам и предпринимателям в период карьерных и жизненных перемен устойчиво двигаться к своим целям без самосаботажа и парализующего внутреннего критика.',
-        },
-        { property: 'og:type', content: 'website' },
-        { property: 'og:locale', content: 'ru_RU' },
-        { property: 'og:title', content: 'Ралия Говорит — коуч по устойчивому росту, ACC ICF' },
-        {
-          property: 'og:description',
-          content:
-            'Помогаю специалистам и предпринимателям устойчиво двигаться к своим целям. Бесплатная диагностическая сессия.',
-        },
-        { property: 'og:image', content: '/og-image.jpg' },
-        { property: 'og:image:width', content: '1200' },
-        { property: 'og:image:height', content: '630' },
-        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'theme-color', content: '#F4F0E7' },
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
       ],
     },

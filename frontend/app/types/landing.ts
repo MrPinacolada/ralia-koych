@@ -1,11 +1,5 @@
 export interface PainPoint {
   quote: string
-  description: string
-}
-
-export interface PainPointGroup {
-  eyebrow: string
-  items: PainPoint[]
 }
 
 export interface MethodStep {
@@ -26,33 +20,30 @@ export interface Credential {
 }
 
 export interface PricingTier {
-  level: string
+  /** Tier name shown as the eyebrow above the price (e.g. «Ясность») */
   name: string
   price: number
   priceLabel: string
   duration: string
-  outcome: string
-  features?: string[]
+  /** «Подходит» body line for this tier */
+  fits: string
   highlighted?: boolean
 }
 
 export interface Testimonial {
   quote: string
+  /** Display name / handle (e.g. «Клиент», «@LoraUfa») */
   name: string
-  age: number
-  role: string
-  city: string
-}
-
-export interface CoachingQuestion {
-  number: string
-  question: string
-  description: string
+  /** Short context label under the name (e.g. «3 сессии») */
+  context: string
 }
 
 export interface FAQItem {
   question: string
-  answer: string
+  /** Optional anchor id placed on the question span (deep-linked from other sections) */
+  id?: string
+  /** Answer paragraphs; may contain trusted inline markup (<strong>) */
+  answer: string[]
 }
 
 export interface ContactFormData {

@@ -5,29 +5,43 @@ const { pricingTiers } = useLandingContent()
 <template>
   <section id="services">
     <div class="container">
+      <!-- Trust plaque · teaser before prices -->
+      <div class="trust-card reveal" style="margin-bottom: 56px;">
+        <p class="trust-case-line">Реальный кейс · 5 сессий: от страха публичных выступлений — к регулярным эфирам и твёрдому экспертному голосу.</p>
+        <a href="#case" class="trust-link">Полный кейс →</a>
+      </div>
+
       <header class="section-head reveal">
         <div class="section-num">V</div>
         <div>
-          <p class="section-eyebrow">Услуги</p>
-          <h2 class="section-title">Как начать работу</h2>
-          <p class="section-lede">
-            Первая встреча - всегда бесплатно. На диагностике мы разбираем вашу ситуацию, проясняем, что тормозит, и намечаем направление дальше.
-          </p>
+          <p class="section-eyebrow">С чего начать</p>
+          <h2 class="section-title">Форматы работы</h2>
         </div>
       </header>
 
-      <!-- Free diagnostic -->
-      <div class="free-card reveal">
-        <div>
-          <p class="free-eyebrow">Шаг 1 · Бесплатно</p>
-          <h3>Диагностическая сессия - 60 минут на Zoom</h3>
-          <p>Полная диагностика и обсуждение, как двигаться дальше. Условие одно: вы готовы что-то менять, а не ждёте готовых ответов.</p>
+      <!-- Step 1 · Strategic session -->
+      <div class="offer-card reveal">
+        <div class="offer-head">
+          <p class="offer-eyebrow">Шаг 1 · Стратегическая сессия</p>
+          <h3>Стратегическая сессия — 7 000 ₽</h3>
+          <p class="offer-meta">2 встречи · 4 часа работы над вашим запросом</p>
         </div>
-        <a href="#final-cta" class="btn btn-primary">Записаться</a>
+        <p class="offer-sub">Подойдёт, если важно быстро разобраться в ситуации и получить ясность.</p>
+        <p class="offer-incl-label">Что входит</p>
+        <ul>
+          <li><span class="check">✓</span><span>Мы разберём вашу текущую ситуацию, определим точку А и точку Б</span></li>
+          <li><span class="check">✓</span><span>Наметим ключевые точки работы: основные препятствия и слепые зоны</span></li>
+          <li><span class="check">✓</span><span>Сформулируем конкретную стратегию движения и первые шаги</span></li>
+          <li><span class="check">✓</span><span>Анализ ресурсов и точек опоры</span></li>
+          <li><span class="check">✓</span><span>При необходимости — список вопросов для предварительной самостоятельной работы</span></li>
+          <li><span class="check">✓</span><span>Итоговая сессия с конкретными шагами и понятным планом дальнейших действий</span></li>
+        </ul>
+        <a href="#final-cta" class="btn btn-primary">Записаться на сессию</a>
       </div>
 
-      <!-- Pricing comparison table -->
+      <!-- Step 2 · Coaching packages (comparison table) -->
       <p class="section-eyebrow reveal" style="margin: 0 0 16px;">Шаг 2 · Пакеты коуч-сессий</p>
+      <p class="section-lede reveal" style="margin: 0 0 28px; max-width: 64ch;">Индивидуальная работа с фокусом на ваших задачах и движении: мы быстрее находим точные решения, определяем ключевые шаги и выстраиваем реализацию без внутреннего саботажа.</p>
 
       <div class="pricing-table reveal">
         <div class="pricing-rows">
@@ -38,83 +52,58 @@ const { pricingTiers } = useLandingContent()
           </div>
           <div
             v-for="tier in pricingTiers"
-            :key="`hdr-${tier.level}`"
+            :key="`hdr-${tier.name}`"
             class="pricing-cell tier row-1"
             :class="{ popular: tier.highlighted }"
           >
             <span v-if="tier.highlighted" class="popular-corner">Чаще выбирают</span>
-            <p class="tier-name">{{ tier.level }}</p>
+            <p class="tier-name">{{ tier.name }}</p>
             <p class="price">{{ tier.priceLabel }}<span class="ruble">₽</span></p>
             <p class="meta-line">{{ tier.duration }}</p>
           </div>
 
-          <!-- Row 2: outcome / who fits -->
+          <!-- Row 2: who it fits -->
           <div class="pricing-cell label-cell">
             <span class="row-label">Подходит</span>
             <p class="row-sub">Если хотите попробовать формат и сделать первый шаг</p>
           </div>
           <div
             v-for="tier in pricingTiers"
-            :key="`fit-${tier.level}`"
+            :key="`fit-${tier.name}`"
             class="pricing-cell tier"
             :class="{ popular: tier.highlighted }"
           >
-            <p class="body-line">{{ tier.outcome }}</p>
+            <p class="body-line">{{ tier.fits }}</p>
           </div>
 
-          <!-- Row 3: included -->
+          <!-- Row 3: included (spans all tiers) -->
           <div class="pricing-cell label-cell">
             <span class="row-label">Что входит</span>
-            <p class="row-sub">В каждый пакет - одинаково</p>
+            <p class="row-sub">В каждый пакет — одинаково</p>
           </div>
-          <div
-            v-for="tier in pricingTiers"
-            :key="`inc-${tier.level}`"
-            class="pricing-cell tier"
-            :class="{ popular: tier.highlighted }"
-          >
+          <div class="pricing-cell tier pricing-incl-span">
             <p class="body-line">Сессия 60 мин, резюме, практики, контакт между сессиями</p>
           </div>
         </div>
       </div>
 
-      <div class="pricing-cta-row reveal">
-        <div class="label-empty"></div>
-        <a
-          v-for="tier in pricingTiers"
-          :key="`cta-${tier.level}`"
-          href="#final-cta"
-          class="btn"
-          :class="tier.highlighted ? 'btn-primary' : 'btn-secondary'"
-        >
-          Выбрать
-        </a>
+      <div class="pricing-cta-single reveal">
+        <div class="spacer"></div>
+        <a href="#final-cta" class="btn btn-primary">Выбрать пакет</a>
       </div>
 
+      <p class="reveal" style="font-family: var(--font-sans); font-size: 13px; color: var(--fog); margin: 0 0 40px; max-width: var(--max-text);">
+        Сколько нужно сессий и есть ли гарантия результата — в разделе
+        <a href="#faq-sessions" style="color: var(--burgundy); text-decoration: underline; text-underline-offset: 3px;">«Вопросы»</a>.
+      </p>
+
+      <!-- Step 3 · Group -->
       <div class="extras-grid reveal">
         <div class="extras-card">
           <p class="extras-eyebrow">Шаг 3 · Группа</p>
-          <h3>Мастермайнд - 1 500 ₽ за встречу</h3>
-          <p>Группа 5–8 человек. 10 встреч по 90 минут раз в неделю. Старт 15 мая. Полный цикл - 15 000 ₽.</p>
-          <a href="#final-cta" class="btn btn-secondary btn-sm">Записаться</a>
-        </div>
-        <div class="extras-card dark">
-          <p class="extras-eyebrow">В каждый пакет входит</p>
-          <ul>
-            <li><span class="check">✓</span><span>Сессия 60 мин на Zoom</span></li>
-            <li><span class="check">✓</span><span>Письменное резюме встречи</span></li>
-            <li><span class="check">✓</span><span>Практики между сессиями</span></li>
-            <li><span class="check">✓</span><span>Личный контакт со мной</span></li>
-          </ul>
-          <p class="meta">
-            Запись и любые вопросы - Telegram
-            <a
-              href="https://t.me/raliyaya"
-              target="_blank"
-              rel="noopener noreferrer"
-              style="color: var(--clay); text-decoration: underline; text-underline-offset: 3px;"
-            >@raliyaya</a>
-          </p>
+          <h3>Мастермайнд — 1 500 ₽ за встречу</h3>
+          <p>Группа 5–8 человек. 10 встреч по 90 минут раз в неделю. Старт 15 июля. Полный цикл — 15 000 ₽.</p>
+          <a href="#final-cta" class="btn btn-secondary btn-sm">Записаться в группу</a>
         </div>
       </div>
     </div>
