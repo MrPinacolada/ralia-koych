@@ -217,9 +217,10 @@
     }
     .hero-text { display: flex; flex-direction: column; gap: 28px; }
     .hero-image { margin-top: 0; }
+    /* Single-column layouts (phone/tablet): text only, portrait hidden */
     @media (max-width: 1023px) {
       .hero-grid { gap: 0; }
-      .hero-image { transform: translateY(-76px); margin-bottom: -76px; }
+      .hero-image { display: none; }
     }
     @media (min-width: 1024px) {
       .hero-grid {
