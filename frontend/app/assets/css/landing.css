@@ -217,10 +217,15 @@
     }
     .hero-text { display: flex; flex-direction: column; gap: 28px; }
     .hero-image { margin-top: 0; }
-    /* Single-column layouts (phone/tablet): text only, portrait hidden */
+    /* Mobile portrait — inline copy sitting between the lede and the meta text;
+       reuses .portrait styling, hidden on desktop where the grid portrait shows */
+    .hero-portrait-mobile { display: none; }
+    /* Single-column layouts (phone/tablet): the grid portrait is hidden,
+       the inline mobile portrait takes its place between the text blocks */
     @media (max-width: 1023px) {
       .hero-grid { gap: 0; }
       .hero-image { display: none; }
+      .hero-portrait-mobile { display: block; margin-block: 4px; }
     }
     @media (min-width: 1024px) {
       .hero-grid {

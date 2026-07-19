@@ -20,6 +20,10 @@ const portraitSrc = '/portrait-hero2.png'
             <p class="hero-lede">Работаю с экспертами и предпринимательницами, <br>которые устали от внутреннего давления, <br>обесценивания себя и самосаботажа.</p>
           </div>
 
+          <figure class="portrait hero-portrait-mobile">
+            <img :src="portraitSrc" alt="Ралия Хабирова — коуч ACC ICF" loading="lazy" decoding="async">
+          </figure>
+
           <p class="hero-meta">
             Я не даю советов и готовых ответов — помогаю вам через контакт с собой и пошаговую структуру <strong>честно признать, чего вы хотите</strong>, выдержать сопротивление, найти решение и устойчиво внедрить перемены в жизнь.
           </p>
