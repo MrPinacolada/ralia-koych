@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Magazine hero — masthead line folded into hero-corner, asymmetric grid, portrait cut-out
-const portraitSrc = '/portrait-hero.png'
+const portraitSrc = '/portrait-hero2.png'
 </script>
 
 <template>
@@ -8,7 +8,7 @@ const portraitSrc = '/portrait-hero.png'
     <div class="container">
       <p class="hero-corner"><span class="accent">№ 01</span> · 2026 · Казань — Бали</p>
       <p class="section-eyebrow hero-eyebrow">Коуч ACC ICF</p>
-      <p class="hero-eyebrow-sub">реализация и самоценность для экспертов</p>
+      <!-- <p class="hero-eyebrow-sub">реализация и самоценность для экспертов</p> -->
 
       <h1 class="h1">
         Перестать <em>бороться с собой</em> — <br>и наконец двигаться туда, <br>куда давно хочется
@@ -37,7 +37,7 @@ const portraitSrc = '/portrait-hero.png'
             >Начать с практики</a>
           </div>
 
-          <p class="hero-cta-meta">Стратегическая сессия · 2 встречи · 7 000 ₽</p>
+          <!-- <p class="hero-cta-meta">Стратегическая сессия · 2 встречи · 7 000 ₽</p> -->
         </div>
 
         <div class="hero-image">

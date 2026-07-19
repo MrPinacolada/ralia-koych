@@ -3,7 +3,7 @@ const { credentials } = useLandingContent()
 
 // Served from frontend/public/. Bound (not static) so the build doesn't try to
 // bundle it — it resolves at runtime, and falls back to a placeholder if missing.
-const certSrc = '/certificate-icf.jpeg'
+const certSrc = '/cert.jpg'
 const certOk = ref(true)
 const certImg = ref<HTMLImageElement | null>(null)
 
@@ -47,8 +47,8 @@ onMounted(() => {
               ref="certImg"
               :src="certSrc"
               alt="Сертификат ICF — BE a COACH, Level 1, 100 часов, Human Capital. Выдан Ралии Хабировой 03.07.2024"
-              width="900"
-              height="636"
+              width="800"
+              height="538"
               loading="lazy"
               decoding="async"
               @error="certOk = false"
